@@ -45,8 +45,8 @@ export default function CartDrawer({
         onClick={onClose}
       ></div>
 
-      <div className={`fixed inset-y-0 ${isAr ? 'left-0' : 'right-0'} max-w-full flex pl-10`}>
-        <div className="w-screen max-w-md bg-[#0d1017] border-l border-amber-500/20 text-white flex flex-col shadow-2xl z-10">
+      <div className={`fixed inset-y-0 ${isAr ? 'left-0' : 'right-0'} flex max-w-full`}>
+        <div className="w-screen max-w-md sm:max-w-md bg-[#0d1017] border-l border-amber-500/20 text-white flex flex-col shadow-2xl z-10">
           
           {/* Drawer Header */}
           <div className="p-6 border-b border-neutral-800 flex items-center justify-between">
@@ -127,14 +127,14 @@ export default function CartDrawer({
                         <div className="flex items-center border border-neutral-700 rounded-lg bg-neutral-950">
                           <button
                             onClick={() => onUpdateQty(item.id, item.quantity - 1)}
-                            className="p-1 text-neutral-400 hover:text-white"
+                            className="p-2 text-neutral-400 hover:text-white"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="px-2 text-xs font-bold text-white">{item.quantity}</span>
+                          <span className="px-3 text-xs font-bold text-white">{item.quantity}</span>
                           <button
                             onClick={() => onUpdateQty(item.id, item.quantity + 1)}
-                            className="p-1 text-neutral-400 hover:text-white"
+                            className="p-2 text-neutral-400 hover:text-white"
                           >
                             <Plus className="w-3 h-3" />
                           </button>

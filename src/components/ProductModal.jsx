@@ -80,27 +80,27 @@ export default function ProductModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-start sm:items-center justify-center p-0 sm:p-6 animate-fadeIn">
       
       {/* Modal Card */}
       <div 
-        className="relative w-full max-w-4xl glass-panel rounded-3xl border-amber-500/30 shadow-2xl overflow-hidden my-8"
+        className="relative w-full max-w-4xl glass-panel sm:rounded-3xl border-0 sm:border border-amber-500/30 shadow-2xl overflow-hidden sm:my-8 min-h-screen sm:min-h-0"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className={`absolute top-4 ${isAr ? 'left-4' : 'right-4'} z-30 p-2 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition-all`}
+          className={`absolute top-3 ${isAr ? 'left-3' : 'right-3'} z-30 p-2.5 rounded-full bg-neutral-900/90 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition-all shadow-lg`}
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 sm:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-6 p-4 sm:p-6 md:p-8 pt-12 sm:pt-6">
           
           {/* Left Column: Visual Gallery (5 cols) */}
-          <div className="md:col-span-5 flex flex-col items-center justify-center space-y-4">
+          <div className="md:col-span-5 flex flex-col items-center justify-center space-y-3">
             
-            <div className="relative w-full h-80 sm:h-96 rounded-2xl bg-gradient-to-b from-[#181d29] to-[#0e111a] p-6 flex items-center justify-center border border-neutral-800">
+            <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-2xl bg-gradient-to-b from-[#181d29] to-[#0e111a] p-4 sm:p-6 flex items-center justify-center border border-neutral-800">
               <img
                 src={activeImage}
                 alt={product.name[lang]}
@@ -120,7 +120,7 @@ export default function ProductModal({
                   <button
                     key={idx}
                     onClick={() => setActiveImage(imgUrl)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 bg-neutral-900 p-1 transition-all ${
+                    className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border-2 bg-neutral-900 p-1 transition-all ${
                       activeImage === imgUrl ? 'border-amber-400 scale-105' : 'border-neutral-800 opacity-60 hover:opacity-100'
                     }`}
                   >
@@ -134,7 +134,7 @@ export default function ProductModal({
             <div className="w-full space-y-2">
               <button
                 onClick={() => onOpenCertificate(product)}
-                className="w-full py-2 px-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-amber-500/20 text-[11px] font-bold text-amber-300 flex items-center justify-center gap-2 transition-all"
+                className="w-full py-2.5 px-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-amber-500/20 text-[11px] font-bold text-amber-300 flex items-center justify-center gap-2 transition-all"
               >
                 <Award className="w-4 h-4 text-amber-400" />
                 <span>{isAr ? 'عرض شهادة الأصالة الملكية المعتمدة' : 'View Official Certificate'}</span>
@@ -145,7 +145,7 @@ export default function ProductModal({
                   onClose();
                   onOpenBookAppointment(product);
                 }}
-                className="w-full py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-[11px] font-bold text-amber-300 flex items-center justify-center gap-2 transition-all"
+                className="w-full py-2.5 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-[11px] font-bold text-amber-300 flex items-center justify-center gap-2 transition-all"
               >
                 <Calendar className="w-4 h-4 text-amber-400" />
                 <span>{isAr ? 'حجز موعد معاينة خاصة في الصالون' : 'Book VIP Private Salon Viewing'}</span>
@@ -155,7 +155,7 @@ export default function ProductModal({
           </div>
 
           {/* Right Column: Full Specifications & Actions (7 cols) */}
-          <div className="md:col-span-7 flex flex-col justify-between space-y-6">
+          <div className="md:col-span-7 flex flex-col justify-between space-y-4 md:space-y-6">
             
             {/* Header info */}
             <div className="space-y-2 text-start">
@@ -170,21 +170,21 @@ export default function ProductModal({
                 </div>
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-black text-white font-serif-luxury">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white font-serif-luxury">
                 {product.name[lang]}
               </h2>
 
-              <p className="text-sm text-neutral-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed line-clamp-3 md:line-clamp-none">
                 {product.description[lang]}
               </p>
             </div>
 
             {/* Price Section */}
-            <div className="p-4 rounded-2xl bg-neutral-900/80 border border-amber-500/20 flex items-center justify-between">
+            <div className="p-3 sm:p-4 rounded-2xl bg-neutral-900/80 border border-amber-500/20 flex items-center justify-between">
               <div>
                 <span className="text-xs text-neutral-400 block">{isAr ? 'السعر الرسمي النهائي' : 'Official Price'}</span>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif-luxury">
+                  <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-amber-400 font-serif-luxury">
                     {convertedPrice.toLocaleString()}
                   </span>
                   <span className="text-sm font-semibold text-neutral-300">{curInfo.symbol}</span>
@@ -210,15 +210,15 @@ export default function ProductModal({
                 {t.product.viewDetails}
               </h4>
 
-              <div className="grid grid-cols-2 gap-2.5 text-xs">
+              <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="p-2.5 rounded-xl bg-neutral-900/50 border border-neutral-800">
                   <span className="text-neutral-500 block">{t.product.movement}</span>
-                  <span className="font-semibold text-neutral-200">{product.specs.movement[lang]}</span>
+                  <span className="font-semibold text-neutral-200 line-clamp-2">{product.specs.movement[lang]}</span>
                 </div>
 
                 <div className="p-2.5 rounded-xl bg-neutral-900/50 border border-neutral-800">
                   <span className="text-neutral-500 block">{t.product.caseSize}</span>
-                  <span className="font-semibold text-neutral-200">{product.specs.caseSize} ({product.specs.caseMaterial[lang]})</span>
+                  <span className="font-semibold text-neutral-200 line-clamp-2">{product.specs.caseSize} ({product.specs.caseMaterial[lang]})</span>
                 </div>
 
                 <div className="p-2.5 rounded-xl bg-neutral-900/50 border border-neutral-800">
@@ -233,7 +233,7 @@ export default function ProductModal({
 
                 <div className="p-2.5 rounded-xl bg-neutral-900/50 border border-neutral-800 col-span-2">
                   <span className="text-neutral-500 block">{t.product.strap}</span>
-                  <span className="font-semibold text-neutral-200">{product.specs.strap[lang]}</span>
+                  <span className="font-semibold text-neutral-200 line-clamp-2">{product.specs.strap[lang]}</span>
                 </div>
               </div>
             </div>
@@ -259,13 +259,13 @@ export default function ProductModal({
                       value={reviewName}
                       onChange={(e) => setReviewName(e.target.value)}
                       placeholder={isAr ? "اسمك الكريم" : "Your Name"}
-                      className="bg-[#181d29] border border-neutral-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      className="bg-[#181d29] border border-neutral-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
                     />
 
                     <select
                       value={reviewRating}
                       onChange={(e) => setReviewRating(Number(e.target.value))}
-                      className="bg-[#181d29] border border-neutral-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      className="bg-[#181d29] border border-neutral-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
                     >
                       <option value={5}>⭐⭐⭐⭐⭐ (5/5)</option>
                       <option value={4}>⭐⭐⭐⭐ (4/5)</option>
@@ -279,10 +279,10 @@ export default function ProductModal({
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
                     placeholder={isAr ? "اكتب رأيك وانطباعك عن الساعة..." : "Your testimonial & experience..."}
-                    className="w-full bg-[#181d29] border border-neutral-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"
+                    className="w-full bg-[#181d29] border border-neutral-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"
                   ></textarea>
 
-                  <button type="submit" className="btn-gold py-2 px-4 rounded-lg text-xs font-bold w-full flex items-center justify-center gap-1.5">
+                  <button type="submit" className="btn-gold py-2.5 px-4 rounded-lg text-xs font-bold w-full flex items-center justify-center gap-1.5">
                     <Send className="w-3.5 h-3.5" />
                     <span>{isAr ? 'إرسال التقييم' : 'Submit Review'}</span>
                   </button>
@@ -299,13 +299,13 @@ export default function ProductModal({
             </div>
 
             {/* CTAs: Add to cart & Customizer & Wishlist */}
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-2 sm:gap-3 pt-2">
               <button
                 onClick={() => {
                   onAddToCart(product);
                   onClose();
                 }}
-                className="flex-1 btn-gold py-3.5 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20"
+                className="flex-1 btn-gold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>{t.product.addToCart}</span>
@@ -316,16 +316,16 @@ export default function ProductModal({
                   onClose();
                   onOpenCustomizer(product);
                 }}
-                className="btn-outline-gold py-3.5 px-4 rounded-xl text-xs font-bold flex items-center gap-1.5"
+                className="btn-outline-gold py-3 sm:py-3.5 px-3 sm:px-4 rounded-xl text-xs font-bold flex items-center gap-1.5"
                 title={isAr ? 'تخصيص الساعة' : 'Customize'}
               >
                 <Palette className="w-4 h-4" />
-                <span>{isAr ? 'تخصيص 3D' : 'Bespoke'}</span>
+                <span className="hidden sm:inline">{isAr ? 'تخصيص 3D' : 'Bespoke'}</span>
               </button>
 
               <button
                 onClick={() => onToggleWishlist(product)}
-                className={`p-3.5 rounded-xl border transition-all ${
+                className={`p-3 sm:p-3.5 rounded-xl border transition-all ${
                   isInWishlist
                     ? 'bg-rose-500/20 border-rose-500/40 text-rose-500'
                     : 'bg-neutral-900 border-neutral-800 text-neutral-300 hover:text-white'
