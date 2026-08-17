@@ -109,17 +109,17 @@ export default function CheckoutModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-start sm:items-center justify-center p-0 sm:p-6 animate-fadeIn">
       
       <div 
-        className="relative w-full max-w-2xl glass-panel rounded-3xl border-amber-500/30 shadow-2xl overflow-hidden my-8 p-6 sm:p-8"
+        className="relative w-full max-w-2xl glass-panel sm:rounded-3xl border-0 sm:border border-amber-500/30 shadow-2xl overflow-hidden sm:my-8 min-h-screen sm:min-h-0 p-4 sm:p-6 md:p-8 pt-12 sm:pt-6 md:pt-8"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         {step !== 'processing' && (
           <button
             onClick={onClose}
-            className={`absolute top-4 ${isAr ? 'left-4' : 'right-4'} z-30 p-2 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition-all`}
+            className={`absolute top-3 ${isAr ? 'left-3' : 'right-3'} z-30 p-2.5 rounded-full bg-neutral-900/90 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 transition-all shadow-lg`}
           >
             <X className="w-5 h-5" />
           </button>

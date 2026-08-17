@@ -119,9 +119,9 @@ export default function ConciergeChatModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-start sm:items-center justify-center p-0 sm:p-6 animate-fadeIn">
       <div 
-        className="relative w-full max-w-2xl glass-panel rounded-3xl border-amber-500/40 shadow-2xl overflow-hidden my-8 flex flex-col h-[650px] text-start"
+        className="relative w-full max-w-2xl glass-panel sm:rounded-3xl border-amber-500/40 shadow-2xl overflow-hidden sm:my-8 min-h-screen sm:min-h-0 flex flex-col h-[650px] text-start"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

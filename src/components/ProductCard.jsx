@@ -77,7 +77,7 @@ export default function ProductCard({
       {/* Image Container with Hover Quick View */}
       <div 
         onClick={() => onQuickView(product)}
-        className="relative bg-gradient-to-b from-[#181d29]/90 to-[#0e111a] p-6 flex items-center justify-center h-64 sm:h-72 cursor-pointer overflow-hidden"
+        className="relative bg-gradient-to-b from-[#181d29]/90 to-[#0e111a] p-4 sm:p-6 flex items-center justify-center h-48 sm:h-64 md:h-72 cursor-pointer overflow-hidden"
       >
         <img
           src={product.image}
@@ -179,7 +179,7 @@ export default function ProductCard({
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => onAddToCart(product)}
-              className="p-2.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black font-bold text-xs transition-all duration-200 flex items-center gap-1.5 shadow-sm active:scale-95"
+              className="p-2.5 sm:px-3.5 sm:py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black font-bold text-xs transition-all duration-200 flex items-center gap-1.5 shadow-sm active:scale-95 min-h-[40px]"
               title={t.product.addToCart}
             >
               <ShoppingBag className="w-4 h-4" />

@@ -73,7 +73,7 @@ export default function BookAppointmentModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-md flex items-start sm:items-center justify-center p-0 sm:p-6 animate-fadeIn">
       <div 
         className="relative w-full max-w-2xl glass-panel rounded-3xl border-amber-500/40 shadow-2xl p-6 sm:p-8 text-start my-8"
         onClick={(e) => e.stopPropagation()}
@@ -81,7 +81,7 @@ export default function BookAppointmentModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className={`absolute top-4 ${isAr ? 'left-4' : 'right-4'} p-2 rounded-full bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-700`}
+          className={`absolute top-3 ${isAr ? 'left-4' : 'right-4'} p-2 rounded-full bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-700`}
         >
           <X className="w-5 h-5" />
         </button>

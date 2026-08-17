@@ -124,7 +124,7 @@ export default function ProductFormModal({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-start sm:items-center justify-center p-0 sm:p-6 animate-fadeIn">
       
       <div 
         className="relative w-full max-w-4xl glass-panel rounded-3xl border-amber-500/30 shadow-2xl overflow-hidden my-8 p-6 sm:p-8 text-start"

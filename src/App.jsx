@@ -433,11 +433,11 @@ export default function App() {
       
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 glass-panel px-5 py-3.5 rounded-2xl border-amber-500/50 shadow-2xl flex items-center gap-3 text-xs sm:text-sm font-bold text-white animate-bounce glow-gold">
-          <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400">
+        <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 z-50 glass-panel px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl border-amber-500/50 shadow-2xl flex items-center gap-3 text-xs sm:text-sm font-bold text-white animate-bounce glow-gold whitespace-nowrap max-w-[90vw] sm:max-w-none">
+          <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
             {toastMessage.type === 'wishlist' ? <Heart className="w-4 h-4 fill-amber-400" /> : <ShoppingBag className="w-4 h-4" />}
           </div>
-          <span>{toastMessage.text}</span>
+          <span className="truncate">{toastMessage.text}</span>
         </div>
       )}
 
@@ -445,10 +445,10 @@ export default function App() {
       {currentView === 'storefront' && (
         <button
           onClick={() => setIsConciergeOpen(true)}
-          className={`fixed bottom-6 ${lang === 'ar' ? 'left-6' : 'right-6'} z-40 p-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-2xl shadow-amber-500/30 flex items-center gap-2 group transition-all duration-300 transform hover:scale-110`}
+          className={`fixed bottom-4 sm:bottom-6 ${lang === 'ar' ? 'left-4 sm:left-6' : 'right-4 sm:right-6'} z-40 p-3.5 sm:p-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-2xl shadow-amber-500/30 flex items-center gap-2 group transition-all duration-300 transform hover:scale-110`}
           title={lang === 'ar' ? 'استشر خبير الساعات الملكي' : 'Consult Master Horologist'}
         >
-          <Bot className="w-6 h-6 animate-pulse" />
+          <Bot className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
           <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-bold text-xs whitespace-nowrap">
             {lang === 'ar' ? 'مستشار الساعات الذكي VIP' : 'AI Horology Concierge'}
           </span>
