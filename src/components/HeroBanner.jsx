@@ -1,46 +1,84 @@
 import React from 'react';
 import { ArrowRight, ArrowLeft, Shield, Award, Clock, Star, Sparkles } from 'lucide-react';
 
-export default function HeroBanner({ lang, t, onExplore, onOpenFeatured }) {
+export default function HeroBanner({ 
+  lang, 
+  t, 
+  onExplore, 
+  onOpenFeatured,
+  onOpenWristFit,
+  onOpenEngraving,
+  onOpenCalibre
+}) {
   const isAr = lang === 'ar';
   const ArrowIcon = isAr ? ArrowLeft : ArrowRight;
 
   return (
-    <section className="relative overflow-hidden pt-6 pb-12 lg:py-20">
+    <section className="relative overflow-hidden pt-6 pb-12 lg:py-24">
       {/* Ambient background glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute top-1/3 right-10 w-87.5 h-87.5 bg-sky-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="absolute top-1/3 right-10 w-88 h-88 bg-sky-500/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Text Column */}
-          <div className="lg:col-span-7 space-y-5 text-start z-10">
+          <div className="lg:col-span-7 space-y-6 text-start z-10">
             
             {/* Top Luxury Pill */}
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-semibold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 animate-spin" style={{ animationDuration: '8s' }} />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-semibold tracking-wide shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 animate-spin" style={{ animationDuration: '10s' }} />
               <span className="line-clamp-1">{t.hero.badge}</span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.2] text-white">
+            {/* Main Luxury Headline */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-[1.15] text-white">
               {t.hero.titleStart}{' '}
-              <span className="text-gold-gradient block mt-1 font-serif-luxury">
+              <span className="text-gold-gradient block mt-1.5 font-luxury-title tracking-wider">
                 {t.hero.titleHighlight}
               </span>
             </h1>
 
             {/* Sub-description */}
-            <p className="text-neutral-300 text-sm sm:text-base max-w-2xl leading-relaxed">
+            <p className="text-neutral-300 text-sm sm:text-base max-w-2xl leading-relaxed font-normal">
               {t.hero.description}
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            {/* Interactive Luxury Experience Quick Pills */}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={onOpenWristFit}
+                className="px-3 py-1.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 border border-amber-500/20 text-[11px] font-semibold text-neutral-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              >
+                <span>📐</span>
+                <span>{lang === 'ar' ? 'محاكي قياس المعصم' : 'Wrist Fit Sizer'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={onOpenEngraving}
+                className="px-3 py-1.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 border border-amber-500/20 text-[11px] font-semibold text-neutral-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              >
+                <span>✨</span>
+                <span>{lang === 'ar' ? 'حفر ليزر مخصص' : 'Laser Engraving'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={onOpenCalibre}
+                className="px-3 py-1.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 border border-amber-500/20 text-[11px] font-semibold text-neutral-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+              >
+                <span>🎧</span>
+                <span>{lang === 'ar' ? 'نبضات المحرك' : 'Calibre Heartbeat'}</span>
+              </button>
+            </div>
+
+            {/* Main CTAs */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={onExplore}
-                className="btn-gold px-5 sm:px-8 py-3 sm:py-4 rounded-xl flex items-center gap-2 sm:gap-3 text-sm font-bold shadow-xl shadow-amber-500/20"
+                className="btn-gold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold shadow-xl shadow-amber-500/20 cursor-pointer"
               >
                 <span>{t.hero.exploreBtn}</span>
                 <ArrowIcon className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -48,7 +86,7 @@ export default function HeroBanner({ lang, t, onExplore, onOpenFeatured }) {
 
               <button
                 onClick={onOpenFeatured}
-                className="btn-outline-gold px-4 sm:px-6 py-3 sm:py-4 rounded-xl text-sm font-semibold"
+                className="btn-outline-gold px-5 sm:px-7 py-3.5 sm:py-4 rounded-xl text-xs sm:text-sm font-bold cursor-pointer"
               >
                 {t.hero.discoverBtn}
               </button>

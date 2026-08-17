@@ -29,6 +29,9 @@ import CertificateModal from './components/CertificateModal';
 import BookAppointmentModal from './components/BookAppointmentModal';
 import TrackOrderModal from './components/TrackOrderModal';
 import WatchCareModal from './components/WatchCareModal';
+import WristFitModal from './components/WristFitModal';
+import EngravingModal from './components/EngravingModal';
+import CalibreAcousticsModal from './components/CalibreAcousticsModal';
 
 // Admin Components
 import AdminLayout from './components/admin/AdminLayout';
@@ -157,6 +160,12 @@ export default function App() {
   const [appointmentProduct, setAppointmentProduct] = useState(null);
   const [isTrackOrderOpen, setIsTrackOrderOpen] = useState(false);
   const [isCareGuideOpen, setIsCareGuideOpen] = useState(false);
+  const [isWristFitOpen, setIsWristFitOpen] = useState(false);
+  const [wristFitProduct, setWristFitProduct] = useState(null);
+  const [isEngravingOpen, setIsEngravingOpen] = useState(false);
+  const [engravingProduct, setEngravingProduct] = useState(null);
+  const [isCalibreOpen, setIsCalibreOpen] = useState(false);
+  const [calibreProduct, setCalibreProduct] = useState(null);
 
   // Admin Modals
   const [isProductFormOpen, setIsProductFormOpen] = useState(false);
@@ -273,18 +282,41 @@ export default function App() {
   };
 
   // Cart operations
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product, customOptions = {}) => {
+    const hasEngraving = !!customOptions.engraving && customOptions.engraving.text;
+    const cartItemId = hasEngraving 
+      ? `${product.id}-engraved-${Date.now().toString(36)}`
+      : product.id;
+
     setCartItems((prev) => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
+      // If not engraved, combine quantities
+      if (!hasEngraving) {
+        const existing = prev.find(item => item.id === product.id && !item.engraving);
+        if (existing) {
+          return prev.map(item =>
+            item.id === product.id && !item.engraving 
+              ? { ...item, quantity: item.quantity + 1 } 
+              : item
+          );
+        }
       }
-      return [...prev, { ...product, quantity: 1 }];
+
+      // Add new item with optional engraving metadata
+      const newItem = {
+        ...product,
+        id: cartItemId,
+        originalProductId: product.id,
+        quantity: 1,
+        ...(hasEngraving ? { engraving: customOptions.engraving } : {})
+      };
+
+      return [...prev, newItem];
     });
+
     triggerToast(
-      lang === 'ar' ? `تمت إضافة ${product.name.ar} إلى سلتك الفاخرة` : `Added ${product.name.en} to your bag`,
+      lang === 'ar' 
+        ? (hasEngraving ? `تمت إضافة ${product.name.ar} مع النقش المخصص إلى سلتك ✨` : `تمت إضافة ${product.name.ar} إلى سلتك الفاخرة`)
+        : (hasEngraving ? `Added ${product.name.en} with bespoke engraving to your bag ✨` : `Added ${product.name.en} to your bag`),
       'cart'
     );
   };
@@ -634,6 +666,18 @@ export default function App() {
               setIsBookAppointmentOpen(true);
             }}
             onOpenCareGuide={() => setIsCareGuideOpen(true)}
+            onOpenWristFit={() => {
+              setWristFitProduct(products[0] || productsData[0]);
+              setIsWristFitOpen(true);
+            }}
+            onOpenEngraving={() => {
+              setEngravingProduct(products[0] || productsData[0]);
+              setIsEngravingOpen(true);
+            }}
+            onOpenCalibre={() => {
+              setCalibreProduct(products[0] || productsData[0]);
+              setIsCalibreOpen(true);
+            }}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onScrollToSection={scrollToSection}
@@ -647,6 +691,18 @@ export default function App() {
               t={t}
               onExplore={() => scrollToSection('products')}
               onOpenFeatured={() => setModalProduct(products[0] || productsData[0])}
+              onOpenWristFit={() => {
+                setWristFitProduct(products[0] || productsData[0]);
+                setIsWristFitOpen(true);
+              }}
+              onOpenEngraving={() => {
+                setEngravingProduct(products[0] || productsData[0]);
+                setIsEngravingOpen(true);
+              }}
+              onOpenCalibre={() => {
+                setCalibreProduct(products[0] || productsData[0]);
+                setIsCalibreOpen(true);
+              }}
             />
           </div>
 
@@ -671,7 +727,7 @@ export default function App() {
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{t.nav.allWatches}</span>
               </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-serif-luxury">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-luxury-title">
                 {lang === 'ar' ? 'تشكيلة الساعات الرجالية الفاخرة' : 'The Men\'s Haute Horlogerie Collection'}
               </h2>
             </div>
@@ -734,6 +790,18 @@ export default function App() {
                       setCertificateProduct(p);
                       setIsCertificateOpen(true);
                     }}
+                    onOpenWristFit={(p) => {
+                      setWristFitProduct(p);
+                      setIsWristFitOpen(true);
+                    }}
+                    onOpenEngraving={(p) => {
+                      setEngravingProduct(p);
+                      setIsEngravingOpen(true);
+                    }}
+                    onOpenCalibre={(p) => {
+                      setCalibreProduct(p);
+                      setIsCalibreOpen(true);
+                    }}
                   />
                 ))}
               </div>
@@ -772,6 +840,18 @@ export default function App() {
             onOpenBookAppointment={(p) => {
               setAppointmentProduct(p);
               setIsBookAppointmentOpen(true);
+            }}
+            onOpenWristFit={(p) => {
+              setWristFitProduct(p);
+              setIsWristFitOpen(true);
+            }}
+            onOpenEngraving={(p) => {
+              setEngravingProduct(p);
+              setIsEngravingOpen(true);
+            }}
+            onOpenCalibre={(p) => {
+              setCalibreProduct(p);
+              setIsCalibreOpen(true);
             }}
             onSubmitReview={handleSubmitReview}
           />
@@ -868,6 +948,39 @@ export default function App() {
             isOpen={isCareGuideOpen}
             onClose={() => setIsCareGuideOpen(false)}
             lang={lang}
+          />
+
+          {/* Virtual Wrist Fit & Sizer Modal */}
+          <WristFitModal
+            isOpen={isWristFitOpen}
+            onClose={() => setIsWristFitOpen(false)}
+            product={wristFitProduct}
+            allProducts={products}
+            onSelectWatch={(w) => {
+              setIsWristFitOpen(false);
+              setModalProduct(w);
+            }}
+            lang={lang}
+            t={t}
+          />
+
+          {/* Live Bespoke Laser Engraving Modal */}
+          <EngravingModal
+            isOpen={isEngravingOpen}
+            onClose={() => setIsEngravingOpen(false)}
+            product={engravingProduct || products[0]}
+            onAddToCart={handleAddToCart}
+            lang={lang}
+            t={t}
+          />
+
+          {/* Calibre Acoustics & Escapement Modal */}
+          <CalibreAcousticsModal
+            isOpen={isCalibreOpen}
+            onClose={() => setIsCalibreOpen(false)}
+            product={calibreProduct || products[0]}
+            lang={lang}
+            t={t}
           />
 
           <CheckoutModal

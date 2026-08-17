@@ -118,7 +118,23 @@ export default function CartDrawer({
                       <h4 className="text-xs font-bold text-neutral-100 truncate">
                         {item.name[lang]}
                       </h4>
-                      <div className="text-xs font-extrabold text-amber-300 font-serif-luxury">
+
+                      {/* Bespoke Laser Engraving Tag */}
+                      {item.engraving && (
+                        <div className="py-1 px-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-300 space-y-0.5">
+                          <div className="flex items-center gap-1 font-bold">
+                            <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                            <span>{t?.engraving?.engravedBadge || 'منقوش بالليزر'}: "{item.engraving.text}"</span>
+                          </div>
+                          {item.engraving.date && (
+                            <div className="text-[9px] text-neutral-400 font-mono">
+                              📅 {item.engraving.date} • {item.engraving.fontName || item.engraving.font}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="text-xs font-extrabold text-amber-300 font-luxury-title">
                         {itemPriceFormatted} {curInfo.symbol}
                       </div>
 

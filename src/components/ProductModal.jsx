@@ -31,6 +31,9 @@ export default function ProductModal({
   onOpenCustomizer,
   onOpenCertificate,
   onOpenBookAppointment,
+  onOpenWristFit,
+  onOpenEngraving,
+  onOpenCalibre,
   onSubmitReview
 }) {
   if (!isOpen || !product) return null;
@@ -41,6 +44,17 @@ export default function ProductModal({
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  // Keyboard accessibility
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const curInfo = currencies[currency] || currencies.USD;
   const isAr = lang === 'ar';
@@ -202,6 +216,48 @@ export default function ProductModal({
                   </span>
                 </div>
               )}
+            </div>
+
+            {/* Interactive Luxury Features Bar */}
+            <div className="grid grid-cols-3 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenWristFit) onOpenWristFit(product);
+                }}
+                className="p-2.5 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 border border-amber-500/20 hover:border-amber-500/50 text-[11px] font-bold text-neutral-200 hover:text-white flex flex-col items-center justify-center gap-1 transition-all cursor-pointer shadow-xs"
+                title={t?.product?.wristFitBtn || 'قياس المعصم'}
+              >
+                <span className="text-base">📐</span>
+                <span className="truncate w-full text-center">{t?.product?.wristFitBtn || 'قياس المعصم'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenEngraving) onOpenEngraving(product);
+                }}
+                className="p-2.5 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 border border-amber-500/20 hover:border-amber-500/50 text-[11px] font-bold text-neutral-200 hover:text-white flex flex-col items-center justify-center gap-1 transition-all cursor-pointer shadow-xs"
+                title={t?.product?.engraveBtn || 'حفر ليزر'}
+              >
+                <span className="text-base">✨</span>
+                <span className="truncate w-full text-center">{t?.product?.engraveBtn || 'حفر ليزر'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenCalibre) onOpenCalibre(product);
+                }}
+                className="p-2.5 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 border border-amber-500/20 hover:border-amber-500/50 text-[11px] font-bold text-neutral-200 hover:text-white flex flex-col items-center justify-center gap-1 transition-all cursor-pointer shadow-xs"
+                title={t?.product?.listenBtn || 'صوت النبضات'}
+              >
+                <span className="text-base">🎧</span>
+                <span className="truncate w-full text-center">{t?.product?.listenBtn || 'صوت المحرك'}</span>
+              </button>
             </div>
 
             {/* Detailed Specs Grid */}

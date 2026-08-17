@@ -1,21 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --bg-main: #0a0c10;
-  --bg-card: rgba(18, 21, 28, 0.75);
-  --bg-card-hover: rgba(28, 33, 44, 0.9);
-  --border-gold: rgba(212, 175, 55, 0.25);
-  --border-gold-hover: rgba(212, 175, 55, 0.6);
-  --gold-primary: #d4af37;
-  --gold-light: #f5df88;
-  --gold-dark: #aa841e;
-  --gold-gradient: linear-gradient(135deg, #f5df88 0%, #d4af37 50%, #99731b 100%);
+  --bg-main: #06070a;
+  --bg-card: rgba(13, 16, 23, 0.82);
+  --bg-card-hover: rgba(20, 25, 36, 0.92);
+  --border-gold: rgba(203, 161, 53, 0.18);
+  --border-gold-hover: rgba(203, 161, 53, 0.48);
+  --gold-primary: #cba135;
+  --gold-light: #f9e8b2;
+  --gold-champagne: #faebd7;
+  --gold-dark: #a37d20;
+  --gold-gradient: linear-gradient(135deg, #faebd7 0%, #ecd384 28%, #cba135 68%, #8c6a1a 100%);
+  --gold-gradient-soft: linear-gradient(135deg, rgba(250, 235, 215, 0.15) 0%, rgba(203, 161, 53, 0.1) 100%);
   --accent-cyan: #38bdf8;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --font-ar: 'Cairo', system-ui, -apple-system, sans-serif;
-  --font-en: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-ar: 'Alexandria', system-ui, -apple-system, sans-serif;
+  --font-en: 'Outfit', system-ui, -apple-system, sans-serif;
   --font-serif: 'Cinzel', serif;
+  --font-marcellus: 'Marcellus', serif;
 }
 
 * {
@@ -24,7 +27,6 @@
 
 html {
   scroll-behavior: smooth;
-  /* Fix iOS viewport height */
   height: -webkit-fill-available;
 }
 
@@ -35,15 +37,14 @@ body {
   min-height: -webkit-fill-available;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 85% 65%, rgba(56, 189, 248, 0.03) 0%, transparent 40%),
-    radial-gradient(circle at 50% 90%, rgba(212, 175, 55, 0.04) 0%, transparent 50%);
+    radial-gradient(circle at 18% 12%, rgba(203, 161, 53, 0.045) 0%, transparent 45%),
+    radial-gradient(circle at 82% 65%, rgba(56, 189, 248, 0.015) 0%, transparent 45%),
+    radial-gradient(circle at 50% 88%, rgba(203, 161, 53, 0.035) 0%, transparent 50%);
   background-attachment: fixed;
-  /* Prevent overscroll bounce on iOS */
   overscroll-behavior: none;
 }
 
-/* Typography per language */
+/* Typography per language & Luxury Hierarchy */
 html[lang="ar"] body {
   font-family: var(--font-ar);
 }
@@ -52,28 +53,42 @@ html[lang="en"] body {
   font-family: var(--font-en);
 }
 
-.font-serif-luxury {
+.font-serif-luxury,
+.font-luxury-title {
   font-family: var(--font-serif);
+}
+
+.font-accent-luxury {
+  font-family: var(--font-marcellus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #090a0f;
+  background: #06070a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #252a36;
+  background: #1e2433;
   border-radius: 4px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(203, 161, 53, 0.15);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
+  background: #cba135;
 }
 
 /* Gold text gradient */
@@ -85,10 +100,10 @@ html[lang="en"] body {
 
 /* Glassmorphism */
 .glass-panel {
-  background: rgba(14, 17, 23, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  background: rgba(13, 16, 23, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-gold);
 }
 
 .glass-panel-hover {
@@ -96,49 +111,49 @@ html[lang="en"] body {
 }
 
 .glass-panel-hover:hover {
-  background: rgba(20, 25, 34, 0.85);
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: 0 12px 30px -10px rgba(212, 175, 55, 0.15);
-  transform: translateY(-4px);
+  background: rgba(19, 24, 34, 0.9);
+  border-color: var(--border-gold-hover);
+  box-shadow: 0 16px 36px -12px rgba(203, 161, 53, 0.12);
+  transform: translateY(-3px);
 }
 
 /* Gold Button */
 .btn-gold {
   background: var(--gold-gradient);
-  color: #090a0f;
+  color: #06070a;
   font-weight: 700;
   border: none;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
 }
 
 .btn-gold:hover {
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
-  transform: scale(1.02);
+  box-shadow: 0 0 28px rgba(203, 161, 53, 0.4);
+  transform: translateY(-1px) scale(1.015);
 }
 
 .btn-outline-gold {
   background: transparent;
-  color: #f5df88;
-  border: 1px solid rgba(212, 175, 55, 0.5);
+  color: #f9e8b2;
+  border: 1px solid rgba(203, 161, 53, 0.45);
   transition: all 0.3s ease;
 }
 
 .btn-outline-gold:hover {
-  background: rgba(212, 175, 55, 0.12);
-  border-color: #d4af37;
+  background: rgba(203, 161, 53, 0.1);
+  border-color: #cba135;
   color: #fff;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 0 20px rgba(203, 161, 53, 0.2);
 }
 
 /* Glowing effects */
 .glow-gold {
-  box-shadow: 0 0 35px -5px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 35px -5px rgba(203, 161, 53, 0.28);
 }
 
 .glow-subtle {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
 }
 
 /* Animation keyframes */
@@ -170,14 +185,14 @@ html[lang="en"] body {
 
 /* Badge styles */
 .badge-gold {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.05) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  color: #f5df88;
+  background: linear-gradient(135deg, rgba(203, 161, 53, 0.18) 0%, rgba(203, 161, 53, 0.04) 100%);
+  border: 1px solid rgba(203, 161, 53, 0.38);
+  color: #f9e8b2;
 }
 
 .badge-cyan {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(56, 189, 248, 0.04) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
   color: #7dd3fc;
 }
 

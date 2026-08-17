@@ -14,7 +14,10 @@ export default function ProductCard({
   onAddToCart,
   onQuickView,
   onOpenCustomizer,
-  onOpenCertificate
+  onOpenCertificate,
+  onOpenWristFit,
+  onOpenEngraving,
+  onOpenCalibre
 }) {
   const isAr = lang === 'ar';
   const curInfo = currencies[currency] || currencies.USD;

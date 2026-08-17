@@ -37,6 +37,9 @@ export default function Navbar({
   onOpenTrackOrder,
   onOpenBookAppointment,
   onOpenCareGuide,
+  onOpenWristFit,
+  onOpenEngraving,
+  onOpenCalibre,
   searchQuery,
   setSearchQuery,
   onScrollToSection,
@@ -55,7 +58,7 @@ export default function Navbar({
   return (
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-amber-500/20 backdrop-blur-xl">
       {/* Top micro announcement bar with Admin portal & Concierge trigger */}
-      <div className="bg-gradient-to-r from-amber-950/50 via-amber-600/15 to-amber-950/50 py-1.5 px-4 text-xs text-amber-200/90 border-b border-amber-500/10 flex items-center justify-between">
+      <div className="bg-linear-to-r from-amber-950/50 via-amber-600/15 to-amber-950/50 py-1.5 px-4 text-xs text-amber-200/90 border-b border-amber-500/10 flex items-center justify-between">
         <div className="flex items-center gap-2 mx-auto sm:mx-0">
           <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
           <span>{lang === 'ar' ? 'دار الساعات الرجالية الفاخرة • شحن دولي مؤمن ومجاني 5 سنوات ضمان' : 'Haute Horlogerie Atelier • Insured Express Delivery & 5-Yr Warranty'}</span>
@@ -108,7 +111,7 @@ export default function Navbar({
             onClick={() => onScrollToSection('hero')}
             className="flex items-center gap-3 cursor-pointer group select-none"
           >
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-300 via-amber-500 to-amber-800 p-[1.5px] shadow-lg shadow-amber-500/10 group-hover:shadow-amber-500/30 transition-all duration-300">
+            <div className="w-11 h-11 rounded-xl bg-linear-to-br from-amber-300 via-amber-500 to-amber-800 p-[1.5px] shadow-lg shadow-amber-500/10 group-hover:shadow-amber-500/30 transition-all duration-300">
               <div className="w-full h-full bg-[#0d0f17] rounded-[10px] flex items-center justify-center">
                 <Watch className="w-6 h-6 text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
               </div>
@@ -130,14 +133,14 @@ export default function Navbar({
               className="hover:text-amber-300 transition-colors duration-200 py-1 relative group"
             >
               {t.nav.allWatches}
-              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
             <button 
               onClick={() => onScrollToSection('categories')} 
               className="hover:text-amber-300 transition-colors duration-200 py-1 relative group"
             >
               {t.nav.categories}
-              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
             <button 
               onClick={onOpenCustomizer} 
@@ -145,7 +148,7 @@ export default function Navbar({
             >
               <Palette className="w-3.5 h-3.5 text-amber-400" />
               <span>{lang === 'ar' ? 'استوديو التخصيص' : 'Bespoke Studio'}</span>
-              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
             <button 
               onClick={onOpenCareGuide} 
@@ -153,14 +156,14 @@ export default function Navbar({
             >
               <Compass className="w-3.5 h-3.5 text-amber-400" />
               <span>{lang === 'ar' ? 'دليل العناية' : 'Care Guide'}</span>
-              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
             <button 
               onClick={() => onScrollToSection('features')} 
               className="hover:text-amber-300 transition-colors duration-200 py-1 relative group"
             >
               {t.nav.guarantee}
-              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
           </nav>
 
@@ -259,7 +262,7 @@ export default function Navbar({
             {/* Cart Button */}
             <button
               onClick={onOpenCart}
-              className="relative flex items-center gap-2 p-2.5 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all transform active:scale-95"
+              className="relative flex items-center gap-2 p-2.5 sm:px-4 sm:py-2 rounded-full bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all transform active:scale-95 cursor-pointer"
             >
               <ShoppingBag className="w-5 h-5 text-black" />
               <span className="hidden sm:inline font-bold">{t.nav.cart}</span>
@@ -337,6 +340,39 @@ export default function Navbar({
               >
                 <Compass className="w-4 h-4 text-amber-400" />
                 <span>{lang === 'ar' ? 'دليل العناية بالساعات' : 'Watch Care Guide'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  if (onOpenWristFit) onOpenWristFit();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-start py-2 px-3 rounded-lg hover:bg-neutral-800 text-neutral-200 flex items-center gap-2"
+              >
+                <span>📐</span>
+                <span>{lang === 'ar' ? 'محاكي قياس المعصم' : 'Wrist Fit Sizer'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  if (onOpenEngraving) onOpenEngraving();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-start py-2 px-3 rounded-lg hover:bg-neutral-800 text-neutral-200 flex items-center gap-2"
+              >
+                <span>✨</span>
+                <span>{lang === 'ar' ? 'استوديو حفر الليزر' : 'Bespoke Engraving'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  if (onOpenCalibre) onOpenCalibre();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-start py-2 px-3 rounded-lg hover:bg-neutral-800 text-neutral-200 flex items-center gap-2"
+              >
+                <span>🎧</span>
+                <span>{lang === 'ar' ? 'نبضات المحرك الصوتي' : 'Calibre Heartbeat'}</span>
               </button>
 
               <button
