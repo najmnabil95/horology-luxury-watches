@@ -434,7 +434,7 @@ export default function App() {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 z-50 glass-panel px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl border-amber-500/50 shadow-2xl flex items-center gap-3 text-xs sm:text-sm font-bold text-white animate-bounce glow-gold whitespace-nowrap max-w-[90vw] sm:max-w-none">
-          <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
             {toastMessage.type === 'wishlist' ? <Heart className="w-4 h-4 fill-amber-400" /> : <ShoppingBag className="w-4 h-4" />}
           </div>
           <span className="truncate">{toastMessage.text}</span>
