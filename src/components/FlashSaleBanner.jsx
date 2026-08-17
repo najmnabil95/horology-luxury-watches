@@ -6,7 +6,7 @@ function Digit({ val, label, lang }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="relative w-14 sm:w-16 h-14 sm:h-16 flex items-center justify-center">
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 to-[#0d0f17] rounded-2xl border border-amber-500/25 shadow-xl shadow-black/40" />
+        <div className="absolute inset-0 bg-linear-to-b from-neutral-900 to-[#0d0f17] rounded-2xl border border-amber-500/25 shadow-xl shadow-black/40" />
         <span className="relative z-10 text-xl sm:text-2xl font-black text-amber-300 font-serif-luxury tabular-nums">
           {String(val).padStart(2, '0')}
         </span>
@@ -55,8 +55,8 @@ export default function FlashSaleBanner({ lang, products = [], onViewProduct, on
   return (
     <section className="py-10 sm:py-14 relative overflow-hidden">
       {/* Atmospheric glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-rose-950/20 via-transparent to-amber-950/20 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] bg-rose-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-r from-rose-950/20 via-transparent to-amber-950/20 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-75 bg-rose-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -82,7 +82,7 @@ export default function FlashSaleBanner({ lang, products = [], onViewProduct, on
           </div>
 
           {/* Countdown */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-2">
+          <div className="shrink-0 flex flex-col items-center gap-2">
             <div className="flex items-center gap-1.5 text-[11px] font-bold text-neutral-400 uppercase tracking-widest">
               <Clock className="w-3.5 h-3.5 text-amber-400" />
               <span>{isAr ? 'ينتهي العرض خلال' : 'Offer Ends In'}</span>
@@ -111,7 +111,7 @@ export default function FlashSaleBanner({ lang, products = [], onViewProduct, on
                 onClick={() => onViewProduct(product)}
               >
                 {/* Product Image */}
-                <div className="relative flex-shrink-0 w-24 h-24 rounded-xl bg-gradient-to-b from-[#181d29] to-[#0d1017] flex items-center justify-center overflow-hidden">
+                <div className="relative shrink-0 w-24 h-24 rounded-xl bg-linear-to-b from-[#181d29] to-[#0d1017] flex items-center justify-center overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name[lang]}

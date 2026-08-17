@@ -91,7 +91,7 @@ export default function WatchCustomizerModal({
           {/* Left Column: Visual Live Interactive Stage (5 cols) */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center space-y-4">
             
-            <div className={`relative w-full h-56 sm:h-72 lg:h-96 rounded-3xl bg-gradient-to-b ${selectedDial.bgClass} p-6 sm:p-8 flex items-center justify-center border border-amber-500/20 shadow-2xl overflow-hidden transition-all duration-700`}>
+            <div className={`relative w-full h-56 sm:h-72 lg:h-96 rounded-3xl bg-linear-to-b ${selectedDial.bgClass} p-6 sm:p-8 flex items-center justify-center border border-amber-500/20 shadow-2xl overflow-hidden transition-all duration-700`}>
               
               {/* Radial glow background */}
               <div 
@@ -203,7 +203,7 @@ export default function WatchCustomizerModal({
                     }`}
                   >
                     <span className="truncate pr-2">{strap.name[lang]}</span>
-                    {selectedStrap.id === strap.id && <Check className="w-4 h-4 text-amber-400 flex-shrink-0" />}
+                    {selectedStrap.id === strap.id && <Check className="w-4 h-4 text-amber-400 shrink-0" />}
                   </button>
                 ))}
               </div>

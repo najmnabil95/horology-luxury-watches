@@ -35,9 +35,9 @@ export default function BrandsTicker({ lang }) {
         {allBrands.map((brand, idx) => (
           <div
             key={idx}
-            className="flex items-center gap-2.5 px-6 sm:px-8 border-r border-amber-500/10 whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-2.5 px-6 sm:px-8 border-r border-amber-500/10 whitespace-nowrap shrink-0"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-400/50 flex-shrink-0" />
+            <ShieldCheck className="w-3.5 h-3.5 text-amber-400/50 shrink-0" />
             <span className="text-xs sm:text-sm font-semibold text-neutral-400 hover:text-amber-300 transition-colors cursor-default">
               {brand.flag} {brand.name}
             </span>

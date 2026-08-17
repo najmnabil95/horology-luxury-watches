@@ -100,7 +100,7 @@ export default function ProductModal({
           {/* Left Column: Visual Gallery (5 cols) */}
           <div className="md:col-span-5 flex flex-col items-center justify-center space-y-3">
             
-            <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-2xl bg-gradient-to-b from-[#181d29] to-[#0e111a] p-4 sm:p-6 flex items-center justify-center border border-neutral-800">
+            <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-2xl bg-linear-to-b from-[#181d29] to-[#0e111a] p-4 sm:p-6 flex items-center justify-center border border-neutral-800">
               <img
                 src={activeImage}
                 alt={product.name[lang]}

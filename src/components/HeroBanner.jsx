@@ -8,8 +8,8 @@ export default function HeroBanner({ lang, t, onExplore, onOpenFeatured }) {
   return (
     <section className="relative overflow-hidden pt-6 pb-12 lg:py-20">
       {/* Ambient background glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute top-1/3 right-10 w-[350px] h-[350px] bg-sky-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-1/3 right-10 w-87.5 h-87.5 bg-sky-500/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -91,7 +91,7 @@ export default function HeroBanner({ lang, t, onExplore, onOpenFeatured }) {
             
             {/* Center Rotating Horizon Ring */}
             <div className="absolute w-72 h-72 sm:w-96 sm:h-96 rounded-full border border-amber-500/20 animate-spin" style={{ animationDuration: '30s' }}></div>
-            <div className="absolute w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full border border-dashed border-amber-500/10"></div>
+            <div className="absolute w-80 h-80 sm:w-105 sm:h-105 rounded-full border border-dashed border-amber-500/10"></div>
 
             {/* Featured Watch Card */}
             <div className="relative w-full max-w-sm glass-panel p-4 sm:p-6 rounded-3xl border-amber-500/30 shadow-2xl glow-gold group">
@@ -102,7 +102,7 @@ export default function HeroBanner({ lang, t, onExplore, onOpenFeatured }) {
               </div>
 
               {/* Watch Image Showcase */}
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#181d29] to-[#0d1017] p-4 flex items-center justify-center h-72 sm:h-80">
+              <div className="relative overflow-hidden rounded-2xl bg-linear-to-b from-[#181d29] to-[#0d1017] p-4 flex items-center justify-center h-72 sm:h-80">
                 <img 
                   src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=85" 
                   alt="Cosmograph Daytona Platinum" 

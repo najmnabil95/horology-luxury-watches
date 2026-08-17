@@ -445,7 +445,7 @@ export default function App() {
       {currentView === 'storefront' && (
         <button
           onClick={() => setIsConciergeOpen(true)}
-          className={`fixed bottom-4 sm:bottom-6 ${lang === 'ar' ? 'left-4 sm:left-6' : 'right-4 sm:right-6'} z-40 p-3.5 sm:p-4 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-2xl shadow-amber-500/30 flex items-center gap-2 group transition-all duration-300 transform hover:scale-110`}
+          className={`fixed bottom-4 sm:bottom-6 ${lang === 'ar' ? 'left-4 sm:left-6' : 'right-4 sm:right-6'} z-40 p-3.5 sm:p-4 rounded-full bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-2xl shadow-amber-500/30 flex items-center gap-2 group transition-all duration-300 transform hover:scale-110`}
           title={lang === 'ar' ? 'استشر خبير الساعات الملكي' : 'Consult Master Horologist'}
         >
           <Bot className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />

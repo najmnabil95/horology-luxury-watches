@@ -72,7 +72,7 @@ export default function CartDrawer({
 
           {/* Free Shipping Alert banner */}
           <div className="bg-amber-500/10 px-6 py-2.5 border-b border-amber-500/20 flex items-center gap-2 text-xs text-amber-300">
-            <Truck className="w-4 h-4 text-amber-400 flex-shrink-0" />
+            <Truck className="w-4 h-4 text-amber-400 shrink-0" />
             <span>{isAr ? 'مؤهل للشحن الجوي السريع والمؤمن مجاناً ✈️' : 'Eligible for Complimentary Insured Express Shipping ✈️'}</span>
           </div>
 
@@ -102,7 +102,7 @@ export default function CartDrawer({
                     className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800 flex gap-4 items-center group"
                   >
                     {/* Item Image */}
-                    <div className="w-20 h-20 rounded-xl bg-[#141824] p-2 flex items-center justify-center flex-shrink-0 border border-neutral-800">
+                    <div className="w-20 h-20 rounded-xl bg-[#141824] p-2 flex items-center justify-center shrink-0 border border-neutral-800">
                       <img
                         src={item.image}
                         alt={item.name[lang]}
