@@ -16,7 +16,9 @@ import {
   Palette,
   Truck,
   Calendar,
-  Compass
+  Compass,
+  Crown,
+  RefreshCw
 } from 'lucide-react';
 import { currencies } from '../data/products';
 
@@ -40,6 +42,10 @@ export default function Navbar({
   onOpenWristFit,
   onOpenEngraving,
   onOpenCalibre,
+  onOpenSpotlight,
+  onOpenFinder,
+  onOpenVIPClub,
+  onOpenTradeIn,
   searchQuery,
   setSearchQuery,
   onScrollToSection,
@@ -65,6 +71,33 @@ export default function Navbar({
         </div>
 
         <div className="hidden sm:flex items-center gap-2">
+          {/* AI Watch Finder Shortcut Button */}
+          <button
+            onClick={onOpenFinder}
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-linear-to-r from-amber-500/30 to-amber-600/30 hover:from-amber-500 hover:to-amber-600 text-amber-300 hover:text-black font-bold text-[11px] border border-amber-500/40 transition-all cursor-pointer shadow-xs animate-pulse"
+          >
+            <Sparkles className="w-3 h-3 text-amber-400" />
+            <span>{lang === 'ar' ? 'مستشار الذكاء الاصطناعي ✨' : 'AI Watch Advisor ✨'}</span>
+          </button>
+
+          {/* VIP Royal Club Shortcut */}
+          <button
+            onClick={onOpenVIPClub}
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-linear-to-r from-amber-900/60 to-yellow-950/60 hover:bg-amber-500 text-amber-300 hover:text-black font-bold text-[11px] border border-amber-500/40 transition-all cursor-pointer"
+          >
+            <Crown className="w-3 h-3 text-amber-400" />
+            <span>{lang === 'ar' ? 'نادي النخبة VIP' : 'VIP Club'}</span>
+          </button>
+
+          {/* Watch Trade-In Shortcut */}
+          <button
+            onClick={onOpenTradeIn}
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white font-semibold text-[11px] border border-neutral-700 transition-all cursor-pointer"
+          >
+            <RefreshCw className="w-3 h-3 text-sky-400" />
+            <span>{lang === 'ar' ? 'استبدال ساعة' : 'Trade-In'}</span>
+          </button>
+
           {/* Track Order Shortcut */}
           <button
             onClick={onOpenTrackOrder}
@@ -89,16 +122,16 @@ export default function Navbar({
             className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-black font-bold text-[11px] border border-emerald-500/40 transition-all cursor-pointer"
           >
             <Bot className="w-3 h-3 text-emerald-400" />
-            <span>{lang === 'ar' ? 'مستشار الساعات VIP' : 'AI Concierge'}</span>
+            <span>{lang === 'ar' ? 'الكونسيرج' : 'Concierge'}</span>
           </button>
 
           {/* Quick Admin Portal Access Link */}
           <button
             onClick={onOpenAdmin}
-            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black font-bold text-[11px] border border-amber-500/40 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white font-bold text-[11px] border border-neutral-700 transition-all cursor-pointer"
           >
-            <LayoutDashboard className="w-3 h-3" />
-            <span>{lang === 'ar' ? 'لوحة التحكم (Admin)' : 'Admin Portal'}</span>
+            <LayoutDashboard className="w-3 h-3 text-amber-400" />
+            <span>{lang === 'ar' ? 'لوحة التحكم' : 'Admin'}</span>
           </button>
         </div>
       </div>
@@ -130,21 +163,29 @@ export default function Navbar({
           <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-neutral-300">
             <button 
               onClick={() => onScrollToSection('products')} 
-              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group"
+              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group cursor-pointer"
             >
               {t.nav.allWatches}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
             <button 
               onClick={() => onScrollToSection('categories')} 
-              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group"
+              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group cursor-pointer"
             >
               {t.nav.categories}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
             <button 
+              onClick={onOpenFinder} 
+              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group flex items-center gap-1.5 text-amber-400 font-bold cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span>{lang === 'ar' ? 'مستشار الساعات' : 'Watch Advisor'}</span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
+            </button>
+            <button 
               onClick={onOpenCustomizer} 
-              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group flex items-center gap-1.5 text-amber-300"
+              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group flex items-center gap-1.5 text-neutral-300 cursor-pointer"
             >
               <Palette className="w-3.5 h-3.5 text-amber-400" />
               <span>{lang === 'ar' ? 'استوديو التخصيص' : 'Bespoke Studio'}</span>
@@ -152,39 +193,26 @@ export default function Navbar({
             </button>
             <button 
               onClick={onOpenCareGuide} 
-              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group flex items-center gap-1.5"
+              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group flex items-center gap-1.5 cursor-pointer"
             >
               <Compass className="w-3.5 h-3.5 text-amber-400" />
               <span>{lang === 'ar' ? 'دليل العناية' : 'Care Guide'}</span>
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
             </button>
-            <button 
-              onClick={() => onScrollToSection('features')} 
-              className="hover:text-amber-300 transition-colors duration-200 py-1 relative group"
-            >
-              {t.nav.guarantee}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 transition-all duration-300 group-hover:w-full"></span>
-            </button>
           </nav>
 
-          {/* Live Search Input */}
-          <div className="hidden md:flex items-center flex-1 max-w-xs mx-6 relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t.nav.searchPlaceholder}
-              className="w-full bg-[#141824]/90 border border-amber-500/20 rounded-full py-2 px-10 text-xs sm:text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 transition-all"
-            />
-            <Search className={`w-4 h-4 text-amber-400/70 absolute ${lang === 'ar' ? 'right-3' : 'left-3'} pointer-events-none`} />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                className={`absolute ${lang === 'ar' ? 'left-3' : 'right-3'} text-neutral-400 hover:text-white text-xs`}
-              >
-                ✕
-              </button>
-            )}
+          {/* Spotlight Search Trigger Bar */}
+          <div 
+            onClick={onOpenSpotlight}
+            className="hidden md:flex items-center flex-1 max-w-xs mx-6 relative cursor-pointer group"
+          >
+            <div className="w-full bg-[#141824]/90 hover:bg-[#191e2e] border border-amber-500/20 hover:border-amber-500/40 rounded-full py-2 px-10 text-xs sm:text-sm text-neutral-400 flex items-center justify-between transition-all shadow-inner">
+              <span className="truncate">{searchQuery || t.nav.searchPlaceholder}</span>
+              <kbd className="hidden xl:inline-block px-2 py-0.5 bg-neutral-900 border border-neutral-700/80 rounded-md text-[10px] font-mono text-neutral-400 font-bold group-hover:text-amber-400 group-hover:border-amber-500/40 transition-colors">
+                Ctrl K
+              </kbd>
+            </div>
+            <Search className={`w-4 h-4 text-amber-400/80 absolute ${lang === 'ar' ? 'right-3' : 'left-3'} pointer-events-none group-hover:text-amber-300`} />
           </div>
 
           {/* Action Icons & Controls */}
@@ -286,26 +314,65 @@ export default function Navbar({
         {/* Mobile Search & Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-neutral-800 space-y-4 animate-fadeIn">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t.nav.searchPlaceholder}
-                className="w-full bg-[#141824] border border-amber-500/20 rounded-xl py-2.5 px-10 text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none"
-              />
-              <Search className={`w-4 h-4 text-amber-400 absolute ${lang === 'ar' ? 'right-3' : 'left-3'} top-3.5`} />
-            </div>
+            {/* Spotlight trigger for mobile */}
+            <button
+              onClick={() => {
+                onOpenSpotlight();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full bg-[#141824] border border-amber-500/30 rounded-xl py-2.5 px-4 text-sm text-neutral-300 flex items-center justify-between text-start"
+            >
+              <div className="flex items-center gap-2.5">
+                <Search className="w-4 h-4 text-amber-400" />
+                <span className="truncate">{t.nav.searchPlaceholder}</span>
+              </div>
+              <kbd className="px-2 py-0.5 bg-neutral-900 border border-neutral-700 rounded text-[10px] text-neutral-400 font-mono">
+                Spotlight
+              </kbd>
+            </button>
 
-            <div className="flex flex-col gap-2 pt-2 text-sm">
+            <div className="flex flex-col gap-2 pt-1 text-sm">
+              <button
+                onClick={() => {
+                  onOpenFinder();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-start py-2.5 px-3 rounded-lg bg-linear-to-r from-amber-500/20 to-amber-600/20 text-amber-300 font-bold flex items-center gap-2 border border-amber-500/30"
+              >
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>{lang === 'ar' ? 'مستشار الساعات الذكي (AI Finder)' : 'AI Watch Advisor Quiz'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  onOpenVIPClub();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-start py-2 px-3 rounded-lg bg-amber-500/10 text-amber-300 font-bold flex items-center gap-2 border border-amber-500/30"
+              >
+                <Crown className="w-4 h-4 text-amber-400" />
+                <span>{lang === 'ar' ? 'نادي كبار الشخصيات VIP' : 'VIP Royal Club'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  onOpenTradeIn();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-start py-2 px-3 rounded-lg bg-neutral-900 text-neutral-200 font-semibold flex items-center gap-2 border border-neutral-800"
+              >
+                <RefreshCw className="w-4 h-4 text-sky-400" />
+                <span>{lang === 'ar' ? 'حاسبة استبدال الساعات (Trade-In)' : 'Watch Trade-In Estimator'}</span>
+              </button>
+
               <button
                 onClick={() => {
                   onOpenAdmin();
                   setMobileMenuOpen(false);
                 }}
-                className="text-start py-2.5 px-3 rounded-lg bg-amber-500/15 text-amber-300 font-bold flex items-center gap-2"
+                className="text-start py-2 px-3 rounded-lg bg-neutral-900 text-neutral-200 font-bold flex items-center gap-2 border border-neutral-800"
               >
-                <LayoutDashboard className="w-4 h-4" />
+                <LayoutDashboard className="w-4 h-4 text-amber-400" />
                 <span>{lang === 'ar' ? 'لوحة التحكم الإدارية (Admin)' : 'Admin Portal'}</span>
               </button>
 

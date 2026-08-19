@@ -277,12 +277,12 @@ export default function CheckoutModal({
                   onClick={() => setPaymentMethod('card')}
                   className={`p-3 rounded-xl border cursor-pointer transition-all ${
                     paymentMethod === 'card'
-                      ? 'bg-amber-500/10 border-amber-400 text-amber-300 font-bold'
+                      ? 'bg-amber-500/15 border-amber-400 text-amber-300 font-bold shadow-xs'
                       : 'bg-neutral-900/60 border-neutral-800 text-neutral-400 hover:text-white'
                   }`}
                 >
                   <div className="text-xs flex items-center gap-2">
-                    <CreditCard className="w-4 h-4" />
+                    <CreditCard className="w-4 h-4 text-amber-400" />
                     <span>{t.checkout.payCard}</span>
                   </div>
                 </div>
@@ -291,12 +291,12 @@ export default function CheckoutModal({
                   onClick={() => setPaymentMethod('tabby')}
                   className={`p-3 rounded-xl border cursor-pointer transition-all ${
                     paymentMethod === 'tabby'
-                      ? 'bg-amber-500/10 border-amber-400 text-amber-300 font-bold'
+                      ? 'bg-emerald-950/40 border-emerald-500 text-emerald-300 font-bold shadow-xs'
                       : 'bg-neutral-900/60 border-neutral-800 text-neutral-400 hover:text-white'
                   }`}
                 >
                   <div className="text-xs flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
                     <span>{t.checkout.payTabby}</span>
                   </div>
                 </div>
@@ -305,16 +305,45 @@ export default function CheckoutModal({
                   onClick={() => setPaymentMethod('cod')}
                   className={`p-3 rounded-xl border cursor-pointer transition-all ${
                     paymentMethod === 'cod'
-                      ? 'bg-amber-500/10 border-amber-400 text-amber-300 font-bold'
+                      ? 'bg-amber-500/15 border-amber-400 text-amber-300 font-bold shadow-xs'
                       : 'bg-neutral-900/60 border-neutral-800 text-neutral-400 hover:text-white'
                   }`}
                 >
                   <div className="text-xs flex items-center gap-2">
-                    <Truck className="w-4 h-4" />
+                    <Truck className="w-4 h-4 text-amber-400" />
                     <span>{t.checkout.payCod}</span>
                   </div>
                 </div>
               </div>
+
+              {/* Installment breakdown when Tabby/BNPL is selected */}
+              {paymentMethod === 'tabby' && (
+                <div className="p-3.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/30 animate-fade-in space-y-2.5">
+                  <div className="flex items-center justify-between text-xs text-emerald-300 font-bold">
+                    <span className="flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>{isAr ? 'جدول سداد تابي (4 دفعات متساوية بدون فوائد)' : 'Tabby 4-Month Schedule (0% Interest)'}</span>
+                    </span>
+                    <span className="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                      0% {isAr ? 'مرابحة' : 'Interest'}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                    {[
+                      { title: isAr ? 'اليوم' : 'Today', amount: Math.round(finalTotal / 4) },
+                      { title: isAr ? 'بعد شهر' : 'Month 1', amount: Math.round(finalTotal / 4) },
+                      { title: isAr ? 'بعد شهرين' : 'Month 2', amount: Math.round(finalTotal / 4) },
+                      { title: isAr ? 'بعد 3 أشهر' : 'Month 3', amount: Math.round(finalTotal / 4) },
+                    ].map((stepItem, i) => (
+                      <div key={i} className="p-2 rounded-xl bg-neutral-900/80 border border-neutral-800 text-center">
+                        <span className="text-[10px] text-neutral-400 block">{stepItem.title}</span>
+                        <span className="font-bold text-white text-xs">{stepItem.amount.toLocaleString()} {curInfo.symbol}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Submit Button */}

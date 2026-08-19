@@ -171,6 +171,11 @@ export default function ProductCard({
               </span>
             </div>
 
+            <div className="text-[10px] text-emerald-400/90 font-medium flex items-center gap-1 mt-0.5">
+              <span>{isAr ? 'أو 4 دفعات ×' : 'or 4x'}</span>
+              <span className="font-bold">{(Math.round(convertedPrice / 4)).toLocaleString()} {curInfo.symbol}</span>
+            </div>
+
             {convertedOriginalPrice && (
               <span className="text-xs text-neutral-500 line-through">
                 {convertedOriginalPrice.toLocaleString()} {curInfo.symbol}

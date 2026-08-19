@@ -32,6 +32,11 @@ import WatchCareModal from './components/WatchCareModal';
 import WristFitModal from './components/WristFitModal';
 import EngravingModal from './components/EngravingModal';
 import CalibreAcousticsModal from './components/CalibreAcousticsModal';
+import WatchFinderModal from './components/WatchFinderModal';
+import SpotlightSearchModal from './components/SpotlightSearchModal';
+import InstallmentPlanModal from './components/InstallmentPlanModal';
+import VIPClubModal from './components/VIPClubModal';
+import TradeInModal from './components/TradeInModal';
 
 // Admin Components
 import AdminLayout from './components/admin/AdminLayout';
@@ -166,10 +171,28 @@ export default function App() {
   const [engravingProduct, setEngravingProduct] = useState(null);
   const [isCalibreOpen, setIsCalibreOpen] = useState(false);
   const [calibreProduct, setCalibreProduct] = useState(null);
+  const [isFinderOpen, setIsFinderOpen] = useState(false);
+  const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
+  const [isInstallmentOpen, setIsInstallmentOpen] = useState(false);
+  const [installmentProduct, setInstallmentProduct] = useState(null);
+  const [isVIPClubOpen, setIsVIPClubOpen] = useState(false);
+  const [isTradeInOpen, setIsTradeInOpen] = useState(false);
 
   // Admin Modals
   const [isProductFormOpen, setIsProductFormOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
+
+  // Global Ctrl+K / Cmd+K Spotlight shortcut
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSpotlightOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   // Toast Notifications
   const [toastMessage, setToastMessage] = useState(null);
@@ -678,6 +701,10 @@ export default function App() {
               setCalibreProduct(products[0] || productsData[0]);
               setIsCalibreOpen(true);
             }}
+            onOpenSpotlight={() => setIsSpotlightOpen(true)}
+            onOpenFinder={() => setIsFinderOpen(true)}
+            onOpenVIPClub={() => setIsVIPClubOpen(true)}
+            onOpenTradeIn={() => setIsTradeInOpen(true)}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onScrollToSection={scrollToSection}
@@ -703,6 +730,7 @@ export default function App() {
                 setCalibreProduct(products[0] || productsData[0]);
                 setIsCalibreOpen(true);
               }}
+              onOpenFinder={() => setIsFinderOpen(true)}
             />
           </div>
 
@@ -853,6 +881,10 @@ export default function App() {
               setCalibreProduct(p);
               setIsCalibreOpen(true);
             }}
+            onOpenInstallmentPlan={(p) => {
+              setInstallmentProduct(p);
+              setIsInstallmentOpen(true);
+            }}
             onSubmitReview={handleSubmitReview}
           />
 
@@ -981,6 +1013,99 @@ export default function App() {
             product={calibreProduct || products[0]}
             lang={lang}
             t={t}
+          />
+
+          {/* AI Luxury Watch Advisor / Style Quiz Modal */}
+          <WatchFinderModal
+            isOpen={isFinderOpen}
+            onClose={() => setIsFinderOpen(false)}
+            products={products}
+            lang={lang}
+            t={t}
+            currency={currency}
+            onAddToCart={handleAddToCart}
+            onOpenProduct={(p) => setModalProduct(p)}
+            onOpenWristFit={(p) => {
+              setWristFitProduct(p);
+              setIsWristFitOpen(true);
+            }}
+          />
+
+          {/* Instant Spotlight Search Modal */}
+          <SpotlightSearchModal
+            isOpen={isSpotlightOpen}
+            onClose={() => setIsSpotlightOpen(false)}
+            products={products}
+            lang={lang}
+            t={t}
+            currency={currency}
+            onOpenProduct={(p) => setModalProduct(p)}
+            onAddToCart={handleAddToCart}
+            onOpenWristFit={(p) => {
+              setWristFitProduct(p);
+              setIsWristFitOpen(true);
+            }}
+            onOpenFinder={() => setIsFinderOpen(true)}
+          />
+
+          {/* Flexible Installment Plan Modal (Tabby & Tamara) */}
+          <InstallmentPlanModal
+            isOpen={isInstallmentOpen}
+            onClose={() => setIsInstallmentOpen(false)}
+            product={installmentProduct || products[0]}
+            currency={currency}
+            lang={lang}
+            t={t}
+            onProceedCheckout={(p, provider) => {
+              setIsInstallmentOpen(false);
+              handleAddToCart(p);
+              setIsCartOpen(false);
+              setIsCheckoutOpen(true);
+            }}
+          />
+
+          {/* VIP Royal Club Membership & Points Modal */}
+          <VIPClubModal
+            isOpen={isVIPClubOpen}
+            onClose={() => setIsVIPClubOpen(false)}
+            lang={lang}
+            t={t}
+            currency={currency}
+            onApplyVoucher={(code, discount) => {
+              const newCoupon = {
+                id: `COUP-${Date.now()}`,
+                code: code,
+                discountType: 'fixed',
+                discountValue: discount,
+                expiryDate: '2026-12-31',
+                isActive: true,
+                description: { ar: 'قسيمة نقاط التاج الملكية', en: 'Royal Crown Points Voucher' }
+              };
+              setCoupons(prev => [newCoupon, ...prev.filter(c => c.code !== code)]);
+              triggerToast(lang === 'ar' ? `تم تفعيل قسيمة الخصم: ${code}` : `Voucher activated: ${code}`, 'cart');
+            }}
+          />
+
+          {/* Watch Trade-In Valuation Modal */}
+          <TradeInModal
+            isOpen={isTradeInOpen}
+            onClose={() => setIsTradeInOpen(false)}
+            lang={lang}
+            t={t}
+            currency={currency}
+            onApplyVoucher={(code, discount) => {
+              const newCoupon = {
+                id: `COUP-${Date.now()}`,
+                code: code,
+                discountType: 'fixed',
+                discountValue: discount,
+                expiryDate: '2026-12-31',
+                isActive: true,
+                description: { ar: 'قسيمة استبدال ساعة معتمدة', en: 'Certified Watch Trade-In Voucher' }
+              };
+              setCoupons(prev => [newCoupon, ...prev.filter(c => c.code !== code)]);
+              triggerToast(lang === 'ar' ? `تم تفعيل قسيمة الاستبدال: ${code}` : `Trade-In voucher activated: ${code}`, 'cart');
+            }}
           />
 
           <CheckoutModal

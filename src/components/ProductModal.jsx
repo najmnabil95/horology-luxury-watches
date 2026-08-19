@@ -34,6 +34,7 @@ export default function ProductModal({
   onOpenWristFit,
   onOpenEngraving,
   onOpenCalibre,
+  onOpenInstallmentPlan,
   onSubmitReview
 }) {
   if (!isOpen || !product) return null;
@@ -216,6 +217,33 @@ export default function ProductModal({
                   </span>
                 </div>
               )}
+            </div>
+
+            {/* BNPL Flexible Installments Widget */}
+            <div 
+              onClick={() => onOpenInstallmentPlan?.(product)}
+              className="p-3 rounded-2xl bg-linear-to-r from-emerald-950/40 via-neutral-900 to-amber-950/40 border border-emerald-500/30 hover:border-emerald-500/60 transition-all cursor-pointer flex items-center justify-between gap-3 group shadow-xs"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                  0%
+                </div>
+                <div className="text-start text-xs">
+                  <span className="text-neutral-200">
+                    {isAr 
+                      ? `أو قسّمها على 4 دفعات بقيمة ${(Math.round(convertedPrice / 4)).toLocaleString()} ${curInfo.symbol} / شهر`
+                      : `or 4 interest-free payments of ${(Math.round(convertedPrice / 4)).toLocaleString()} ${curInfo.symbol} / mo`}
+                  </span>
+                  <div className="flex items-center gap-2 mt-0.5 text-[11px] text-neutral-400">
+                    <span className="text-emerald-400 font-bold">tabby</span>
+                    <span>•</span>
+                    <span className="text-amber-400 font-bold">tamara</span>
+                    <span>•</span>
+                    <span className="underline text-amber-300 group-hover:text-white transition-colors">{t.installments?.learnMore || 'Details'}</span>
+                  </div>
+                </div>
+              </div>
+              <Sparkles className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform shrink-0" />
             </div>
 
             {/* Interactive Luxury Features Bar */}

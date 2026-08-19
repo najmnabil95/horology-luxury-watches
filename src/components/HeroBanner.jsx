@@ -8,7 +8,8 @@ export default function HeroBanner({
   onOpenFeatured,
   onOpenWristFit,
   onOpenEngraving,
-  onOpenCalibre
+  onOpenCalibre,
+  onOpenFinder
 }) {
   const isAr = lang === 'ar';
   const ArrowIcon = isAr ? ArrowLeft : ArrowRight;
@@ -44,8 +45,17 @@ export default function HeroBanner({
               {t.hero.description}
             </p>
 
-            {/* Interactive Luxury Experience Quick Pills */}
+            {/* Interactive Luxury Features Shortcuts */}
             <div className="flex flex-wrap items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={onOpenFinder}
+                className="px-3.5 py-1.5 rounded-full bg-linear-to-r from-amber-500/25 to-amber-600/25 hover:from-amber-500/40 hover:to-amber-600/40 border border-amber-500/40 text-[11px] font-bold text-amber-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-md shadow-amber-500/10 animate-pulse"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>{lang === 'ar' ? 'مستشار الساعات الذكي (AI Quiz)' : 'AI Watch Advisor Quiz'}</span>
+              </button>
+
               <button
                 type="button"
                 onClick={onOpenWristFit}
