@@ -37,6 +37,8 @@ import SpotlightSearchModal from './components/SpotlightSearchModal';
 import InstallmentPlanModal from './components/InstallmentPlanModal';
 import VIPClubModal from './components/VIPClubModal';
 import TradeInModal from './components/TradeInModal';
+import { supabaseService, isSupabaseConfigured } from './lib/supabase';
+import { playLuxuryChime, sendBrowserPushNotification } from './lib/notifications';
 
 // Admin Components
 import AdminLayout from './components/admin/AdminLayout';
@@ -193,6 +195,81 @@ export default function App() {
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
+
+  // Supabase Initial Fetch & Realtime Synchronizations
+  useEffect(() => {
+    if (isSupabaseConfigured) {
+      // 1. Fetch Products
+      supabaseService.getProducts().then(dbProducts => {
+        if (dbProducts && dbProducts.length > 0) {
+          setProducts(dbProducts);
+        }
+      });
+
+      // 2. Fetch Orders
+      supabaseService.getOrders().then(dbOrders => {
+        if (dbOrders && dbOrders.length > 0) {
+          setOrders(dbOrders);
+        }
+      });
+
+      // 3. Fetch Appointments
+      supabaseService.getAppointments().then(dbApts => {
+        if (dbApts && dbApts.length > 0) {
+          setAppointments(dbApts);
+        }
+      });
+
+      // 4. Fetch Reviews
+      supabaseService.getReviews().then(dbReviews => {
+        if (dbReviews && dbReviews.length > 0) {
+          setReviews(dbReviews);
+        }
+      });
+
+      // 5. Subscribe to Realtime Orders
+      const ordersSub = supabaseService.subscribeToChanges(
+        'orders',
+        (newOrder) => {
+          setOrders(prev => {
+            if (prev.some(o => o.id === newOrder.id)) return prev;
+            return [newOrder, ...prev];
+          });
+          playLuxuryChime('order');
+          sendBrowserPushNotification(
+            lang === 'ar' ? `🚨 وصول طلب VIP سحابي فوري (${newOrder.id})` : `🚨 Realtime VIP Order Received (${newOrder.id})`,
+            `Total: $${newOrder.total} USD - ${newOrder.customer?.fullName || 'VIP Client'}`
+          );
+          triggerToast(
+            lang === 'ar' ? `⚡ وصول طلب سحابي فوري جديد (${newOrder.id})` : `⚡ Realtime VIP Order Received (${newOrder.id})`,
+            'order'
+          );
+        },
+        (updatedOrder) => {
+          setOrders(prev => prev.map(o => o.id === updatedOrder.id ? { ...o, ...updatedOrder } : o));
+        }
+      );
+
+      // 6. Subscribe to Realtime Appointments
+      const aptsSub = supabaseService.subscribeToChanges(
+        'appointments',
+        (newApt) => {
+          setAppointments(prev => {
+            if (prev.some(a => a.id === newApt.id)) return prev;
+            return [newApt, ...prev];
+          });
+        },
+        (updatedApt) => {
+          setAppointments(prev => prev.map(a => a.id === updatedApt.id ? { ...a, ...updatedApt } : a));
+        }
+      );
+
+      return () => {
+        ordersSub.unsubscribe();
+        aptsSub.unsubscribe();
+      };
+    }
+  }, [lang]);
 
   // Toast Notifications
   const [toastMessage, setToastMessage] = useState(null);
@@ -361,6 +438,10 @@ export default function App() {
     setOrders((prev) => [orderData, ...prev]);
     setCartItems([]);
     addActivityLog(`تم إنشاء طلب شراء VIP جديد (${orderData.id})`, `New VIP order received (${orderData.id})`, 'order');
+    if (isSupabaseConfigured) {
+      supabaseService.createOrder(orderData);
+      supabaseService.logActivity(`New VIP order placed (${orderData.id})`, `Total: ${orderData.total} USD`, orderData.customer?.fullName || 'VIP Client');
+    }
   };
 
   // Wishlist operations
@@ -416,11 +497,17 @@ export default function App() {
   const handleSaveAppointment = (newApt) => {
     setAppointments(prev => [newApt, ...prev]);
     addActivityLog(`تم حجز موعد معاينة خاصة جديد (${newApt.clientName})`, `New private viewing booked (${newApt.clientName})`, 'concierge');
+    if (isSupabaseConfigured) {
+      supabaseService.createAppointment(newApt);
+    }
   };
 
   const handleSubmitReview = (newReview) => {
     setReviews(prev => [newReview, ...prev]);
     addActivityLog(`تم إرسال مراجعة جديدة للساعة (${newReview.customerName})`, `New customer review submitted (${newReview.customerName})`, 'reviews');
+    if (isSupabaseConfigured) {
+      supabaseService.createReview(newReview);
+    }
   };
 
   // Admin Product Actions
@@ -434,12 +521,18 @@ export default function App() {
       triggerToast(lang === 'ar' ? 'تمت إضافة الساعة الجديدة للكتالوج بنجاح' : 'New timepiece added to catalog', 'cart');
       addActivityLog(`تمت إضافة ساعة جديدة للكتالوج (${savedProduct.brand})`, `Added new timepiece (${savedProduct.brand})`, 'products');
     }
+    if (isSupabaseConfigured) {
+      supabaseService.upsertProduct(savedProduct);
+    }
   };
 
   const handleDeleteProduct = (productId) => {
     setProducts(prev => prev.filter(p => p.id !== productId));
     triggerToast(lang === 'ar' ? 'تم حذف الساعة من الكتالوج' : 'Timepiece removed from catalog', 'wishlist');
     addActivityLog(`تم حذف ساعة من الكتالوج (${productId})`, `Removed watch (${productId})`, 'products');
+    if (isSupabaseConfigured) {
+      supabaseService.deleteProduct(productId);
+    }
   };
 
   // Admin Order Actions
@@ -447,6 +540,9 @@ export default function App() {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
     triggerToast(lang === 'ar' ? `تم تحديث حالة الطلب ${orderId}` : `Order ${orderId} status updated`, 'cart');
     addActivityLog(`تم تغيير حالة الطلب ${orderId} إلى ${newStatus}`, `Changed status of ${orderId} to ${newStatus}`, 'order');
+    if (isSupabaseConfigured) {
+      supabaseService.updateOrderStatus(orderId, newStatus);
+    }
   };
 
   // Admin Marketing Actions
@@ -535,6 +631,7 @@ export default function App() {
           productsCount={products.length}
           reviewsCount={reviews.filter(r => r.status === 'pending').length}
           appointmentsCount={appointments.filter(a => a.status === 'pending').length}
+          isCloudConnected={isSupabaseConfigured}
         >
           {adminTab === 'overview' && (
             <AdminOverview
@@ -573,6 +670,7 @@ export default function App() {
               adminT={adminT}
               lang={lang}
               currency={currency}
+              storeSettings={siteSettings}
             />
           )}
 
@@ -1113,37 +1211,9 @@ export default function App() {
             onClose={() => setIsCheckoutOpen(false)}
             cartItems={cartItems}
             coupons={coupons}
-            onClearCart={() => {
-              if (cartItems.length > 0) {
-                const subtotalUSD = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-                const taxUSD = Math.round(subtotalUSD * ((siteSettings.taxRate || 15) / 100));
-                const totalUSD = subtotalUSD + taxUSD;
-
-                const newOrder = {
-                  id: `HR-${Math.floor(100000 + Math.random() * 900000)}`,
-                  customer: {
-                    fullName: lang === 'ar' ? "عميل متجر النخبة" : "VIP Store Client",
-                    fullNameEn: "VIP Store Client",
-                    email: "client@horology-vip.com",
-                    phone: "+966 50 888 9900",
-                    city: lang === 'ar' ? "الرياض، المملكة العربية السعودية" : "Riyadh, Saudi Arabia",
-                    address: lang === 'ar' ? "شارع الملك فهد، برج الفيصلية" : "King Fahad Rd, Faisaliah Tower"
-                  },
-                  items: [...cartItems],
-                  subtotal: subtotalUSD,
-                  tax: taxUSD,
-                  shipping: 0,
-                  total: totalUSD,
-                  status: "pending",
-                  paymentMethod: "card",
-                  paymentLabel: { ar: "بطاقة ائتمانية / Apple Pay", en: "Credit Card / Apple Pay" },
-                  date: new Date().toISOString().slice(0, 16).replace('T', ' '),
-                  notes: "طلب فاخر جديد مباشر من المتجر الإلكتروني"
-                };
-
-                handleOrderPlaced(newOrder);
-              }
-            }}
+            storeSettings={siteSettings}
+            onClearCart={() => setCartItems([])}
+            onOrderSuccess={(newOrder) => handleOrderPlaced(newOrder)}
             lang={lang}
             t={t}
             currency={currency}

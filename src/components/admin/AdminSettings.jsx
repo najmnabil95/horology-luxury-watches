@@ -517,7 +517,7 @@ export default function AdminSettings({
         )}
 
         {/* ============================================================ */}
-        {/* TAB 4: PAYMENT GATEWAYS */}
+        {/* TAB 4: PAYMENT GATEWAYS & NOTIFICATIONS */}
         {/* ============================================================ */}
         {activeSubTab === 'payment' && (
           <div className="glass-panel p-6 sm:p-8 rounded-3xl border-neutral-800 space-y-6 animate-fadeIn">
@@ -528,15 +528,16 @@ export default function AdminSettings({
               </div>
               <div>
                 <h3 className="text-base font-bold text-white">{adminT.settings.payment.sectionTitle}</h3>
-                <p className="text-xs text-neutral-400">{isAr ? 'التحكم في بوابات الدفع الإلكتروني والتقسيط' : 'Manage active payment providers and installment options'}</p>
+                <p className="text-xs text-neutral-400">{isAr ? 'التحكم في بوابات الدفع الإلكتروني، مفاتيح API، وقنوات الإشعارات الفورية' : 'Manage payment gateways, API credentials & live notification channels'}</p>
               </div>
             </div>
 
-            <div className="space-y-4">
+            {/* Gateway Toggles */}
+            <div className="space-y-3">
               <label className="flex items-center justify-between p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 cursor-pointer">
                 <div>
                   <span className="text-xs font-bold text-white block">{adminT.settings.payment.enableCards}</span>
-                  <span className="text-[11px] text-neutral-400">{isAr ? 'فيزا، ماستركارد، مدى، و Apple Pay' : 'Visa, Mastercard, Mada & Apple Pay'}</span>
+                  <span className="text-[11px] text-neutral-400">{isAr ? 'فيزا، ماستركارد، مدى، و Apple Pay مع التحقق 3DS' : 'Visa, Mastercard, Mada & Apple Pay with 3D Secure'}</span>
                 </div>
                 <input
                   type="checkbox"
@@ -575,7 +576,7 @@ export default function AdminSettings({
               <label className="flex items-center justify-between p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 cursor-pointer">
                 <div>
                   <span className="text-xs font-bold text-white block">{adminT.settings.payment.enableCod}</span>
-                  <span className="text-[11px] text-neutral-400">{isAr ? 'إمكانية فحص الساعة الملكية مع المندوب قبل السداد' : 'Inspect before payment via armored concierge'}</span>
+                  <span className="text-[11px] text-neutral-400">{isAr ? 'إمكانية فحص الساعة الملكية مع المندوب المصفح قبل السداد' : 'Inspect before payment via armored concierge'}</span>
                 </div>
                 <input
                   type="checkbox"
@@ -584,12 +585,14 @@ export default function AdminSettings({
                   className="w-5 h-5 accent-amber-400 rounded"
                 />
               </label>
+            </div>
 
-              {/* Sandbox toggle */}
+            {/* Sandbox & Live API Credentials */}
+            <div className="space-y-4 pt-4 border-t border-neutral-800">
               <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
                 <div>
                   <span className="text-xs font-bold text-amber-300 block">{adminT.settings.payment.sandboxMode}</span>
-                  <span className="text-[10px] text-neutral-400">{isAr ? 'وضع المعاملات التجريبية الوهمية لاختبار الدفع' : 'Mock payments for sandbox testing'}</span>
+                  <span className="text-[10px] text-neutral-400">{isAr ? 'وضع المعاملات التجريبية الوهمية لاختبار الدفع بدون سحب مالي حقيقي' : 'Mock payments & 3DS simulation for sandbox testing'}</span>
                 </div>
                 <input
                   type="checkbox"
@@ -597,6 +600,63 @@ export default function AdminSettings({
                   onChange={(e) => setSettingsForm({ ...settingsForm, sandboxMode: e.target.checked })}
                   className="w-5 h-5 accent-amber-400 rounded"
                 />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5 p-4 rounded-2xl bg-neutral-900/50 border border-neutral-800">
+                  <label className="text-xs font-bold text-neutral-300">Stripe Publishable Key</label>
+                  <input
+                    type="text"
+                    value={settingsForm.stripeKey || ''}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, stripeKey: e.target.value })}
+                    placeholder="pk_live_51M..."
+                    className="w-full bg-[#141824] border border-neutral-700 rounded-xl p-2.5 text-xs text-white font-mono placeholder-neutral-600 focus:outline-none"
+                  />
+                  <span className="text-[10px] text-neutral-500">{isAr ? 'مفتاح Stripe العام لبطاقات الائتمان ومدى' : 'Stripe Public key for live credit card checkout'}</span>
+                </div>
+
+                <div className="space-y-1.5 p-4 rounded-2xl bg-neutral-900/50 border border-neutral-800">
+                  <label className="text-xs font-bold text-neutral-300">Tabby Public Key / Merchant Code</label>
+                  <input
+                    type="text"
+                    value={settingsForm.tabbyKey || ''}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, tabbyKey: e.target.value })}
+                    placeholder="pk_test_tabby_..."
+                    className="w-full bg-[#141824] border border-neutral-700 rounded-xl p-2.5 text-xs text-white font-mono placeholder-neutral-600 focus:outline-none"
+                  />
+                  <span className="text-[10px] text-neutral-500">{isAr ? 'رمز تاجر تابي للتقسيط الفوري' : 'Tabby Merchant public key'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Instant Notifications Channels */}
+            <div className="space-y-4 pt-4 border-t border-neutral-800">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                🔔 {isAr ? 'قنوات التنبيهات والإشعارات الفورية' : 'Live Notifications & Alerts Hub'}
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5 p-4 rounded-2xl bg-neutral-900/50 border border-neutral-800">
+                  <label className="text-xs font-bold text-neutral-300">{isAr ? 'رقم واتساب الإدارة لاستقبال إشعارات الطلبات' : 'Admin WhatsApp Alert Number'}</label>
+                  <input
+                    type="text"
+                    value={settingsForm.whatsappNumber || '+966501112233'}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, whatsappNumber: e.target.value })}
+                    placeholder="+966 50 111 2233"
+                    className="w-full bg-[#141824] border border-neutral-700 rounded-xl p-2.5 text-xs text-white font-mono focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1.5 p-4 rounded-2xl bg-neutral-900/50 border border-neutral-800">
+                  <label className="text-xs font-bold text-neutral-300">{isAr ? 'مفتاح Resend API للبريد الإلكتروني' : 'Resend Email API Key'}</label>
+                  <input
+                    type="password"
+                    value={settingsForm.resendApiKey || ''}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, resendApiKey: e.target.value })}
+                    placeholder="re_123456789..."
+                    className="w-full bg-[#141824] border border-neutral-700 rounded-xl p-2.5 text-xs text-white font-mono focus:outline-none"
+                  />
+                </div>
               </div>
             </div>
 

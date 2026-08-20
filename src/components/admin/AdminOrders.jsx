@@ -11,16 +11,22 @@ import {
   Watch, 
   ShieldCheck, 
   Sparkles,
-  DollarSign
+  DollarSign,
+  MessageCircle,
+  Phone,
+  Send,
+  CreditCard
 } from 'lucide-react';
 import { currencies } from '../../data/products';
+import { generateCustomerStatusWhatsAppUrl, printOrDownloadInvoice, playLuxuryChime } from '../../lib/notifications';
 
 export default function AdminOrders({
   orders,
   onUpdateOrderStatus,
   adminT,
   lang,
-  currency
+  currency,
+  storeSettings = {}
 }) {
   const isAr = lang === 'ar';
   const curInfo = currencies[currency] || currencies.USD;
@@ -59,17 +65,31 @@ export default function AdminOrders({
     }
   };
 
+  const handleStatusChange = (orderId, newStatus) => {
+    onUpdateOrderStatus(orderId, newStatus);
+    playLuxuryChime('status');
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn text-start">
       
       {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white font-serif-luxury">
-          {adminT.orders.title}
-        </h1>
-        <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-          {adminT.orders.subtitle}
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white font-serif-luxury">
+            {adminT.orders.title}
+          </h1>
+          <p className="text-xs sm:text-sm text-neutral-400 mt-1">
+            {adminT.orders.subtitle}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <div className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>{isAr ? 'إجمالي الطلبات:' : 'Total Orders:'} {orders.length}</span>
+          </div>
+        </div>
       </div>
 
       {/* Filters Bar */}
@@ -107,7 +127,7 @@ export default function AdminOrders({
       </div>
 
       {/* Orders Table */}
-      <div className="glass-panel rounded-3xl border-neutral-800 overflow-hidden">
+      <div className="glass-panel rounded-3xl border-neutral-800 overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-start">
             <thead className="bg-[#0b0e14] border-b border-neutral-800 text-neutral-400 font-bold uppercase tracking-wider">
@@ -132,6 +152,7 @@ export default function AdminOrders({
                 filteredOrders.map((order) => {
                   const badge = getStatusBadge(order.status);
                   const orderTotalFormatted = Math.round(order.total * curInfo.rate).toLocaleString();
+                  const whatsAppUrl = generateCustomerStatusWhatsAppUrl(order, order.status, 'DHL-VIP-8829', lang);
 
                   return (
                     <tr key={order.id} className="hover:bg-neutral-900/40 transition-colors group">
@@ -164,7 +185,7 @@ export default function AdminOrders({
                         <div className="space-y-1">
                           {order.items.map((item, idx) => (
                             <div key={idx} className="text-[11px] text-neutral-300">
-                              <span className="font-semibold">{item.quantity}x</span> {item.name[lang] || item.name.ar}
+                              <span className="font-semibold text-amber-400">{item.quantity}x</span> {item.name?.[lang] || item.name?.ar || item.name || 'Swiss Watch'}
                             </div>
                           ))}
                         </div>
@@ -176,22 +197,25 @@ export default function AdminOrders({
                           {orderTotalFormatted} {curInfo.symbol}
                         </div>
                         <div className="text-[10px] text-emerald-400 font-semibold">
-                          {isAr ? 'شحن VIP مجاني' : 'VIP Shipping Inc.'}
+                          {isAr ? 'شحن VIP مؤمن' : 'Insured Shipping'}
                         </div>
                       </td>
 
                       {/* Payment */}
                       <td className="py-4 px-4">
-                        <span className="text-neutral-300 text-xs block capitalize">
-                          {order.paymentLabel ? order.paymentLabel[lang] : order.paymentMethod}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <CreditCard className="w-3.5 h-3.5 text-amber-400" />
+                          <span className="text-neutral-300 text-xs block capitalize font-medium">
+                            {order.paymentLabel ? (order.paymentLabel[lang] || order.paymentLabel.ar) : order.paymentMethod}
+                          </span>
+                        </div>
                       </td>
 
                       {/* Status Selector */}
                       <td className="py-4 px-4">
                         <select
                           value={order.status}
-                          onChange={(e) => onUpdateOrderStatus(order.id, e.target.value)}
+                          onChange={(e) => handleStatusChange(order.id, e.target.value)}
                           className={`text-[11px] font-bold rounded-xl px-3 py-1.5 border focus:outline-none cursor-pointer ${badge.bg}`}
                         >
                           <option value="pending" className="bg-[#121622] text-white">{adminT.overview.orderStatus.pending}</option>
@@ -204,13 +228,38 @@ export default function AdminOrders({
 
                       {/* Actions */}
                       <td className="py-4 px-6 text-center">
-                        <button
-                          onClick={() => setSelectedInvoiceOrder(order)}
-                          className="px-3.5 py-1.5 rounded-xl bg-neutral-900 hover:bg-amber-500 text-neutral-300 hover:text-black font-bold text-xs border border-neutral-800 transition-all flex items-center justify-center gap-1.5 mx-auto"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>{adminT.orders.table.viewInvoice}</span>
-                        </button>
+                        <div className="flex items-center justify-center gap-1.5">
+                          
+                          {/* View Invoice in Modal */}
+                          <button
+                            onClick={() => setSelectedInvoiceOrder(order)}
+                            title={adminT.orders.table.viewInvoice}
+                            className="p-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 transition-all"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+
+                          {/* Quick WhatsApp Update */}
+                          <a
+                            href={whatsAppUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={isAr ? 'إرسال تحديث عبر واتساب' : 'Send WhatsApp Status Update'}
+                            className="p-2 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 transition-all"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" />
+                          </a>
+
+                          {/* Print Tax Invoice Directly */}
+                          <button
+                            onClick={() => printOrDownloadInvoice(order, storeSettings, lang)}
+                            title={isAr ? 'طباعة الفاتورة الرسمية' : 'Print Tax Invoice'}
+                            className="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-all"
+                          >
+                            <Printer className="w-3.5 h-3.5" />
+                          </button>
+
+                        </div>
                       </td>
 
                     </tr>
@@ -281,7 +330,7 @@ export default function AdminOrders({
                   {adminT.orders.invoice.paymentInfo}
                 </span>
                 <div className="text-neutral-200">
-                  {selectedInvoiceOrder.paymentLabel ? selectedInvoiceOrder.paymentLabel[lang] : selectedInvoiceOrder.paymentMethod}
+                  {selectedInvoiceOrder.paymentLabel ? (selectedInvoiceOrder.paymentLabel[lang] || selectedInvoiceOrder.paymentLabel.ar) : selectedInvoiceOrder.paymentMethod}
                 </div>
                 <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
                   <ShieldCheck className="w-3.5 h-3.5" />
@@ -314,7 +363,7 @@ export default function AdminOrders({
                     return (
                       <tr key={idx}>
                         <td className="py-3 text-start">
-                          <span className="font-bold text-white block">{it.name[lang] || it.name.ar}</span>
+                          <span className="font-bold text-white block">{it.name?.[lang] || it.name?.ar || it.name}</span>
                           <span className="text-[10px] text-amber-400 font-bold uppercase">{it.brand}</span>
                         </td>
                         <td className="py-3 text-center font-bold text-neutral-300">{it.quantity}</td>
@@ -359,14 +408,24 @@ export default function AdminOrders({
             </div>
 
             {/* Actions */}
-            <div className="pt-8 border-t border-neutral-800 flex items-center justify-between">
+            <div className="pt-8 border-t border-neutral-800 flex flex-wrap items-center justify-between gap-4">
               <span className="text-[11px] text-neutral-500">
                 {isAr ? 'شهادة أصالة وضمان دولي معتمد لمدة 5 سنوات مرفقة مع هذا الطلب.' : '5-Year International Warranty & Certificate of Authenticity guaranteed.'}
               </span>
 
               <div className="flex items-center gap-3">
+                <a
+                  href={generateCustomerStatusWhatsAppUrl(selectedInvoiceOrder, selectedInvoiceOrder.status, 'DHL-VIP-8829', lang)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#25D366] font-bold text-xs flex items-center gap-1.5 border border-[#25D366]/40 transition-all"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>{isAr ? 'واتساب' : 'WhatsApp'}</span>
+                </a>
+
                 <button
-                  onClick={() => window.print()}
+                  onClick={() => printOrDownloadInvoice(selectedInvoiceOrder, storeSettings, lang)}
                   className="btn-gold px-6 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20"
                 >
                   <Printer className="w-4 h-4" />

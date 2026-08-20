@@ -39,7 +39,8 @@ export default function AdminLayout({
   ordersCount,
   productsCount,
   reviewsCount,
-  appointmentsCount
+  appointmentsCount,
+  isCloudConnected = false
 }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [currencyDropdown, setCurrencyDropdown] = useState(false);
@@ -238,6 +239,19 @@ export default function AdminLayout({
           {/* Right: Controls & Notifications */}
           <div className="flex items-center gap-2 sm:gap-4">
             
+            {/* Supabase Cloud Connection Status Badge */}
+            <div 
+              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold border shadow-xs transition-all ${
+                isCloudConnected 
+                  ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300 shadow-emerald-500/10' 
+                  : 'bg-neutral-900/80 border-amber-500/30 text-amber-300'
+              }`}
+              title={isCloudConnected ? "Supabase PostgreSQL Realtime Sync Active" : "Local Storage Mode (Add credentials in .env to enable Supabase)"}
+            >
+              <span className={`w-2 h-2 rounded-full ${isCloudConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></span>
+              <span>{isCloudConnected ? (isAr ? 'سحابة Supabase متصلة' : 'Supabase Live Sync') : (isAr ? 'الوضع المحلي' : 'Local Storage Mode')}</span>
+            </div>
+
             {/* Notification Bell */}
             <div className="relative">
               <button
