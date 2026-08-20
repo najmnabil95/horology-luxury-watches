@@ -40,6 +40,13 @@ import {
   sendBrowserPushNotification,
   requestPushPermission 
 } from '../lib/notifications';
+import { sanitizeText, sanitizeEmail, sanitizePhone, sanitizeName, createRateLimiter } from '../lib/sanitize';
+
+// Only show sandbox cards in dev / sandbox mode
+const IS_SANDBOX = import.meta.env.VITE_SANDBOX_MODE === 'true' || import.meta.env.DEV;
+
+// Client-side rate limiter: max 3 orders per 10 minutes
+const checkoutRateLimiter = createRateLimiter('checkout_submit', 3, 10 * 60 * 1000);
 
 export default function CheckoutModal({
   isOpen,
@@ -213,6 +220,26 @@ export default function CheckoutModal({
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // ── Security: Rate Limiting ─────────────────────────────────
+    if (!checkoutRateLimiter.check()) {
+      const remaining = checkoutRateLimiter.cooldownRemaining();
+      alert(isAr
+        ? `لقد تجاوزت الحد المسموح به من الطلبات. يرجى الانتظار ${remaining} ثانية.`
+        : `Too many order attempts. Please wait ${remaining} seconds before trying again.`
+      );
+      return;
+    }
+
+    // ── Security: Sanitize all user inputs ──────────────────────
+    const sanitizedData = {
+      fullName: sanitizeName(formData.fullName, 120),
+      email: sanitizeEmail(formData.email) || formData.email.trim().slice(0, 254),
+      phone: sanitizePhone(formData.phone),
+      city: sanitizeName(formData.city, 80),
+      address: sanitizeText(formData.address, 300),
+      notes: sanitizeText(formData.notes, 500)
+    };
+
     const orderId = 'HR-' + Math.floor(100000 + Math.random() * 900000);
 
     const paymentLabels = {
@@ -226,12 +253,12 @@ export default function CheckoutModal({
     const newOrder = {
       id: orderId,
       customer: {
-        fullName: formData.fullName,
-        fullNameEn: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        city: formData.city,
-        address: formData.address
+        fullName: sanitizedData.fullName,
+        fullNameEn: sanitizedData.fullName,
+        email: sanitizedData.email,
+        phone: sanitizedData.phone,
+        city: sanitizedData.city,
+        address: sanitizedData.address
       },
       items: [...cartItems],
       subtotal: subtotalUSD,
@@ -245,7 +272,7 @@ export default function CheckoutModal({
       cardBrand: paymentMethod === 'card' ? cardBrand : null,
       cardLast4: paymentMethod === 'card' ? cardForm.number.slice(-4) : null,
       date: new Date().toISOString().slice(0, 16).replace('T', ' '),
-      notes: formData.notes || (isAr ? "طلب مباشر من المتجر الإلكتروني" : "Direct boutique order")
+      notes: sanitizedData.notes || (isAr ? "طلب مباشر من المتجر الإلكتروني" : "Direct boutique order")
     };
 
     // Route to appropriate verification modal
@@ -526,24 +553,26 @@ export default function CheckoutModal({
                     </span>
                   </div>
 
-                  {/* Sandbox test cards quick fill */}
-                  <div className="p-2.5 rounded-xl bg-neutral-900/70 border border-neutral-800">
-                    <span className="text-[10px] text-neutral-400 block mb-1.5 font-semibold">
-                      ⚡ {isAr ? 'بطاقات تجريبية للاختبار السريع (Sandbox):' : 'Quick Test Sandbox Cards:'}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {sandboxTestCards.map((tc, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => handleSelectSandboxCard(tc)}
-                          className="px-2.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[10px] font-mono text-amber-300 border border-neutral-700 transition-colors"
-                        >
-                          {tc.name}
-                        </button>
-                      ))}
+                  {/* Sandbox test cards quick fill — only in dev/sandbox mode */}
+                  {IS_SANDBOX && (
+                    <div className="p-2.5 rounded-xl bg-neutral-900/70 border border-amber-500/20">
+                      <span className="text-[10px] text-amber-500/70 block mb-1.5 font-semibold">
+                        🧪 {isAr ? 'بيئة الاختبار — بطاقات تجريبية:' : 'Sandbox Mode — Test Cards:'}
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {sandboxTestCards.map((tc, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => handleSelectSandboxCard(tc)}
+                            className="px-2.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-[10px] font-mono text-amber-300 border border-neutral-700 transition-colors"
+                          >
+                            {tc.name}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Card Number */}
                   <div className="space-y-1">

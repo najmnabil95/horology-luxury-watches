@@ -17,6 +17,7 @@ import {
   Search, 
   Menu, 
   X, 
+  LogOut,
   ShieldCheck, 
   Sparkles,
   ExternalLink,
@@ -35,6 +36,7 @@ export default function AdminLayout({
   t,
   adminT,
   onReturnToStore,
+  onLogout,
   children,
   ordersCount,
   productsCount,
@@ -157,6 +159,15 @@ export default function AdminLayout({
                 {adminT.adminBadge}
               </span>
             </div>
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                title={isAr ? 'تسجيل الخروج' : 'Sign out'}
+                className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 transition-all"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 

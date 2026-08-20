@@ -522,6 +522,31 @@ export default function AdminSettings({
         {activeSubTab === 'payment' && (
           <div className="glass-panel p-6 sm:p-8 rounded-3xl border-neutral-800 space-y-6 animate-fadeIn">
             
+            {/* ── SECURITY WARNING ─────────────────────────────────────── */}
+            <div className="flex items-start gap-3 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30">
+              <div className="w-8 h-8 shrink-0 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400 mt-0.5">
+                <AlertTriangle className="w-4 h-4" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs font-bold text-rose-300">
+                  {isAr ? '⚠️ تحذير أمني هام — مفاتيح API' : '⚠️ Security Warning — API Keys'}
+                </p>
+                <p className="text-[11px] text-rose-200/70 leading-relaxed">
+                  {isAr
+                    ? 'لا تقم بحفظ المفاتيح السرية (Secret Keys) هنا أبداً. هذه القيم تُحفظ في localStorage وهي غير مشفرة. للإنتاج، استخدم متغيرات البيئة في Vercel (VITE_STRIPE_KEY، VITE_TABBY_KEY...) بدلاً من ذلك.'
+                    : 'Never save Secret Keys here. These values are stored unencrypted in localStorage. For production use, set them as Vercel Environment Variables (VITE_STRIPE_KEY, VITE_TABBY_KEY...) instead.'}
+                </p>
+                <a
+                  href="https://vercel.com/docs/environment-variables"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 hover:text-amber-300 underline underline-offset-2 mt-1"
+                >
+                  {isAr ? 'تعلّم كيفية إعداد متغيرات البيئة في Vercel →' : 'Learn how to set Vercel Environment Variables →'}
+                </a>
+              </div>
+            </div>
+
             <div className="flex items-center gap-3 pb-4 border-b border-neutral-800">
               <div className="w-10 h-10 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
                 <CreditCard className="w-5 h-5" />

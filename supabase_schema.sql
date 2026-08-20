@@ -103,7 +103,19 @@ CREATE TABLE IF NOT EXISTS public.activity_logs (
 );
 
 -- ==============================================================================
--- SECURITY & ROW LEVEL POLICIES (RLS)
+-- SECURITY & ROW LEVEL POLICIES (RLS) — HARDENED
+-- ==============================================================================
+-- Policy Design:
+--   • PRODUCTS: Anyone can READ. Only authenticated users (admin) can INSERT/UPDATE/DELETE.
+--   • ORDERS: Anyone can INSERT (place order). Only authenticated users can SELECT all / UPDATE status.
+--   • APPOINTMENTS: Anyone can INSERT (book). Only authenticated users can SELECT all / UPDATE.
+--   • REVIEWS: Anyone can INSERT new review (pending). Anyone can read APPROVED reviews.
+--             Only authenticated users can UPDATE (moderate) or DELETE.
+--   • COUPONS: Anyone can read ACTIVE coupons (for validation). Only authenticated can manage.
+--   • ACTIVITY LOGS: Only authenticated users can manage.
+--
+-- NOTE: Enable Supabase Auth (Dashboard → Auth → Providers) and set SUPABASE_SERVICE_ROLE_KEY
+--       in your Vercel environment for admin operations to work server-side.
 -- ==============================================================================
 
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
@@ -113,26 +125,95 @@ ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.coupons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.activity_logs ENABLE ROW LEVEL SECURITY;
 
--- Allow public read and write access for store operations
-CREATE POLICY "Public Read Products" ON public.products FOR SELECT USING (true);
-CREATE POLICY "Public Manage Products" ON public.products FOR ALL USING (true);
+-- ── PRODUCTS ─────────────────────────────────────────────────────────────────
+-- Anyone can view products (storefront)
+DROP POLICY IF EXISTS "Public Read Products" ON public.products;
+DROP POLICY IF EXISTS "Public Manage Products" ON public.products;
+CREATE POLICY "Public Read Products"
+    ON public.products FOR SELECT USING (true);
+-- Only authenticated users (admin) can create/update/delete products
+CREATE POLICY "Authenticated Manage Products"
+    ON public.products FOR ALL
+    USING (auth.role() = 'authenticated')
+    WITH CHECK (auth.role() = 'authenticated');
 
-CREATE POLICY "Public Read Orders" ON public.orders FOR SELECT USING (true);
-CREATE POLICY "Public Create Orders" ON public.orders FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public Update Orders" ON public.orders FOR UPDATE USING (true);
+-- ── ORDERS ────────────────────────────────────────────────────────────────────
+-- Anyone can place an order
+DROP POLICY IF EXISTS "Public Read Orders" ON public.orders;
+DROP POLICY IF EXISTS "Public Create Orders" ON public.orders;
+DROP POLICY IF EXISTS "Public Update Orders" ON public.orders;
+CREATE POLICY "Authenticated Read All Orders"
+    ON public.orders FOR SELECT
+    USING (auth.role() = 'authenticated');
+CREATE POLICY "Public Create Orders"
+    ON public.orders FOR INSERT
+    WITH CHECK (true);
+-- Only admin can update order status
+CREATE POLICY "Authenticated Update Orders"
+    ON public.orders FOR UPDATE
+    USING (auth.role() = 'authenticated')
+    WITH CHECK (auth.role() = 'authenticated');
 
-CREATE POLICY "Public Read Appointments" ON public.appointments FOR SELECT USING (true);
-CREATE POLICY "Public Create Appointments" ON public.appointments FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public Update Appointments" ON public.appointments FOR UPDATE USING (true);
+-- ── APPOINTMENTS ──────────────────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Public Read Appointments" ON public.appointments;
+DROP POLICY IF EXISTS "Public Create Appointments" ON public.appointments;
+DROP POLICY IF EXISTS "Public Update Appointments" ON public.appointments;
+CREATE POLICY "Public Create Appointments"
+    ON public.appointments FOR INSERT
+    WITH CHECK (true);
+CREATE POLICY "Authenticated Read Appointments"
+    ON public.appointments FOR SELECT
+    USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated Update Appointments"
+    ON public.appointments FOR UPDATE
+    USING (auth.role() = 'authenticated')
+    WITH CHECK (auth.role() = 'authenticated');
 
-CREATE POLICY "Public Read Reviews" ON public.reviews FOR SELECT USING (true);
-CREATE POLICY "Public Create Reviews" ON public.reviews FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public Update Reviews" ON public.reviews FOR UPDATE USING (true);
+-- ── REVIEWS ───────────────────────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Public Read Reviews" ON public.reviews;
+DROP POLICY IF EXISTS "Public Create Reviews" ON public.reviews;
+DROP POLICY IF EXISTS "Public Update Reviews" ON public.reviews;
+-- Anyone can read APPROVED reviews
+CREATE POLICY "Public Read Approved Reviews"
+    ON public.reviews FOR SELECT
+    USING (status = 'approved' OR auth.role() = 'authenticated');
+-- Anyone can submit a review (will be 'pending' until approved)
+CREATE POLICY "Public Create Reviews"
+    ON public.reviews FOR INSERT
+    WITH CHECK (true);
+-- Only authenticated (admin) can moderate (update status) or delete
+CREATE POLICY "Authenticated Moderate Reviews"
+    ON public.reviews FOR UPDATE
+    USING (auth.role() = 'authenticated')
+    WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated Delete Reviews"
+    ON public.reviews FOR DELETE
+    USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Public Read Coupons" ON public.coupons FOR SELECT USING (true);
-CREATE POLICY "Public Manage Coupons" ON public.coupons FOR ALL USING (true);
+-- ── COUPONS ───────────────────────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Public Read Coupons" ON public.coupons;
+DROP POLICY IF EXISTS "Public Manage Coupons" ON public.coupons;
+-- Anyone can read active coupons (for validation at checkout)
+CREATE POLICY "Public Read Active Coupons"
+    ON public.coupons FOR SELECT
+    USING (is_active = true OR auth.role() = 'authenticated');
+-- Only admin can create/update/delete coupons
+CREATE POLICY "Authenticated Manage Coupons"
+    ON public.coupons FOR ALL
+    USING (auth.role() = 'authenticated')
+    WITH CHECK (auth.role() = 'authenticated');
 
-CREATE POLICY "Public Manage Logs" ON public.activity_logs FOR ALL USING (true);
+-- ── ACTIVITY LOGS ─────────────────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Public Manage Logs" ON public.activity_logs;
+-- Anyone can insert a log (used by client-side events)
+CREATE POLICY "Public Insert Logs"
+    ON public.activity_logs FOR INSERT
+    WITH CHECK (true);
+-- Only admin can read / delete logs
+CREATE POLICY "Authenticated Read Logs"
+    ON public.activity_logs FOR SELECT
+    USING (auth.role() = 'authenticated');
+
 
 -- ==============================================================================
 -- ENABLE REALTIME REPLICATION (For instant live updates in Admin Dashboard)

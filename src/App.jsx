@@ -39,6 +39,7 @@ import VIPClubModal from './components/VIPClubModal';
 import TradeInModal from './components/TradeInModal';
 import { supabaseService, isSupabaseConfigured } from './lib/supabase';
 import { playLuxuryChime, sendBrowserPushNotification } from './lib/notifications';
+import { sanitizeText } from './lib/sanitize';
 
 // Admin Components
 import AdminLayout from './components/admin/AdminLayout';
@@ -52,14 +53,24 @@ import AdminAppointments from './components/admin/AdminAppointments';
 import AdminActivityLogs from './components/admin/AdminActivityLogs';
 import AdminSettings, { defaultSettings } from './components/admin/AdminSettings';
 import ProductFormModal from './components/admin/ProductFormModal';
+import AdminLoginModal, { isAdminSessionValid, setAdminSession, clearAdminSession } from './components/admin/AdminLoginModal';
 
 import { Sparkles, Check, Heart, ShoppingBag, Bot, Layers, Palette } from 'lucide-react';
 
 export default function App() {
   // View mode: 'storefront' | 'admin'
   const [currentView, setCurrentView] = useState(() => {
-    return localStorage.getItem('horology_view_mode') || 'storefront';
+    // Security: restore admin view only if session is still valid
+    const saved = localStorage.getItem('horology_view_mode');
+    if (saved === 'admin' && !isAdminSessionValid()) {
+      localStorage.setItem('horology_view_mode', 'storefront');
+      return 'storefront';
+    }
+    return saved || 'storefront';
   });
+
+  // Admin Login Gate
+  const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
 
   // Admin active tab
   const [adminTab, setAdminTab] = useState('overview');
@@ -626,7 +637,14 @@ export default function App() {
           setCurrency={setCurrency}
           t={t}
           adminT={adminT}
-          onReturnToStore={() => setCurrentView('storefront')}
+          onReturnToStore={() => {
+            setCurrentView('storefront');
+          }}
+          onLogout={() => {
+            clearAdminSession();
+            setCurrentView('storefront');
+            localStorage.setItem('horology_view_mode', 'storefront');
+          }}
           ordersCount={orders.length}
           productsCount={products.length}
           reviewsCount={reviews.filter(r => r.status === 'pending').length}
@@ -806,7 +824,14 @@ export default function App() {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onScrollToSection={scrollToSection}
-            onOpenAdmin={() => setCurrentView('admin')}
+            onOpenAdmin={() => {
+              // Security Gate: check session before granting admin access
+              if (isAdminSessionValid()) {
+                setCurrentView('admin');
+              } else {
+                setIsAdminLoginOpen(true);
+              }
+            }}
           />
 
           {/* Hero Banner */}
@@ -1220,6 +1245,20 @@ export default function App() {
           />
         </>
       )}
+
+      {/* ============================================================ */}
+      {/* SECURITY GATE: Admin Login Modal */}
+      {/* ============================================================ */}
+      <AdminLoginModal
+        isOpen={isAdminLoginOpen}
+        lang={lang}
+        onSuccess={() => {
+          setIsAdminLoginOpen(false);
+          setCurrentView('admin');
+          localStorage.setItem('horology_view_mode', 'admin');
+        }}
+        onClose={() => setIsAdminLoginOpen(false)}
+      />
 
     </div>
   );
